@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -8,13 +9,13 @@
     <link
       href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap"
       rel="stylesheet" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="{% static 'main/style.css' %}" />
     <title>Do you love me? | @coding.stella</title>
 </head>
 <body>
 
 <div class="question-container container">
-<video class="local-gif" src="Reply me love.mp4" autoplay muted loop></video>
+<video class="local-gif" src="{% static 'main/Reply me love.mp4' %}" autoplay muted loop></video>
   <h2 class="question">Do you love me?</h2>
   <div class="button-container">
     <button class="yes-btn btn js-yes-btn">Yes</button>
@@ -22,7 +23,7 @@
   </div>
 </div>
 <div class="result-container container">
-  <video class="gif-result" src="Love me.mp4" autoplay loop></video>
+  <video class="gif-result" src="{% static 'main/Love me.mp4' %}" autoplay loop></video>
   <h2>I knew it😍!</h2>
 </div>
 
@@ -34,7 +35,7 @@
   </div>
   <div class="cssload-shadow"></div>
 </div>
-<script src="script.js"></script>
+<script src="{% static 'main/script.js' %}"></script>
 
 </body>
 </html>
