@@ -1,0 +1,375 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Romantic Journey | Slideshow</title>
+    <link rel="stylesheet" href="{% static 'main/style.css' %}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Quicksand:wght@300;600&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #fff0f3 0%, #ffe6e9 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .slideshow-container {
+            position: relative;
+            width: 85vw;
+            max-width: 600px;
+            height: 75vh;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+            animation: fadeEffect 1.5s;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            /* Preserve romantic framing */
+            border-radius: 15px;
+            animation: zoomEffect 6s ease-in-out infinite alternate;
+        }
+
+        @keyframes fadeEffect {
+            from {
+                opacity: 0;
+                transform: scale(0.98) translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @keyframes zoomEffect {
+            from {
+                transform: scale(1);
+            }
+
+            to {
+                transform: scale(1.05);
+            }
+        }
+
+        .prev,
+        .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            width: auto;
+            padding: 16px;
+            margin-top: -22px;
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 24px;
+            transition: 0.6s ease;
+            border-radius: 10px;
+            background: var(--glass);
+            user-select: none;
+            border: 1px solid var(--glass-border);
+        }
+
+        .next {
+            right: -60px;
+        }
+
+        .prev {
+            left: -60px;
+        }
+
+        .prev:hover,
+        .next:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .caption-text {
+            color: var(--primary);
+            font-size: 2.2rem;
+            padding: 20px;
+            position: absolute;
+            bottom: -80px;
+            width: 100%;
+            text-align: center;
+            font-family: 'Dancing Script', cursive;
+            background: linear-gradient(to right, #ff6b81, #ff4757);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .dots-container {
+            text-align: center;
+            padding: 20px;
+            position: absolute;
+            bottom: 20px;
+        }
+
+        .dot {
+            cursor: pointer;
+            height: 12px;
+            width: 12px;
+            margin: 0 5px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+            transition: background-color 0.6s ease;
+        }
+
+        .active,
+        .dot:hover {
+            background-color: var(--primary);
+        }
+
+        .back-home {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            padding: 10px 20px;
+            border-radius: 15px;
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 600;
+            z-index: 100;
+            transition: 0.3s;
+        }
+
+        .back-home:hover {
+            transform: translateX(-5px);
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Romantic Overlay */
+        .heart-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            background-image: radial-gradient(circle at 50% 50%, rgba(255, 107, 129, 0.05) 0%, transparent 80%);
+        }
+
+        @media screen and (max-width: 768px) {
+            .next {
+                right: 10px;
+                opacity: 0.7;
+            }
+
+            .prev {
+                left: 10px;
+                opacity: 0.7;
+            }
+
+            .slideshow-container {
+                width: 95vw;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+    <div class="heart-bg" id="floating-hearts"></div>
+
+    <h1
+        style="position: fixed; top: 100px; color: var(--primary); font-family: 'Dancing Script', cursive; font-size: 3rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.05);">
+        Our Romantic Journey</h1>
+
+    <a href="{% url 'home' %}" class="back-home">← Back to Love</a>
+
+    <div class="slideshow-container">
+        <!-- Slides -->
+        <div class="slide">
+            <img src="{% static 'main/gallery/gallery1.png' %}" alt="Our Moment 1">
+        </div>
+        <div class="slide">
+            <img src="{% static 'main/gallery/gallery2.png' %}" alt="Our Moment 2">
+        </div>
+        <div class="slide">
+            <img src="{% static 'main/gallery/gallery3.jpg' %}" alt="Our Moment 3">
+        </div>
+        <div class="slide">
+            <img src="{% static 'main/gallery/gallery4.jpg' %}" alt="Our Moment 4">
+        </div>
+        <div class="slide">
+            <img src="{% static 'main/gallery/gallery5.jpg' %}" alt="Our Moment 5">
+        </div>
+        <div class="slide">
+            <img src="{% static 'main/gallery/gallery6.jpg' %}" alt="Our Moment 6">
+        </div>
+        <div class="slide">
+            <img src="{% static 'main/gallery/gallery7.jpg' %}" alt="Our Moment 7">
+        </div>
+        <div class="slide">
+            <img src="{% static 'main/gallery/gallery8.jpg' %}" alt="Our Moment 8">
+        </div>
+        <div class="slide">
+            <img src="{% static 'main/gallery/gallery9.png' %}" alt="Our Moment 9">
+        </div>
+        <div class="slide">
+            <img src="{% static 'main/gallery/gallery10.jpg' %}" alt="Our Moment 10">
+        </div>
+        <div class="slide">
+            <img src="{% static 'main/gallery/gallery11.png' %}" alt="Our Moment 11">
+        </div>
+        <div class="slide">
+            <img src="{% static 'main/gallery/gallery12.jpg' %}" alt="Our Moment 12">
+        </div>
+        <div class="slide">
+            <img src="{% static 'main/gallery/gallery13.jpg' %}" alt="Our Moment 13">
+        </div>
+        <div class="slide">
+            <img src="{% static 'main/gallery/gallery14.jpg' %}" alt="Our Moment 14">
+        </div>
+
+        <!-- Navigation -->
+        <a class="prev" onclick="plusSlides(-1)">❮</a>
+        <a class="next" onclick="plusSlides(1)">❯</a>
+
+        <div id="slide-caption" class="caption-text">Every moment with you is a dream...</div>
+    </div>
+
+    <div class="dots-container">
+        <span class="dot" onclick="currentSlide(1)"></span>
+        <span class="dot" onclick="currentSlide(2)"></span>
+        <span class="dot" onclick="currentSlide(3)"></span>
+        <span class="dot" onclick="currentSlide(4)"></span>
+        <span class="dot" onclick="currentSlide(5)"></span>
+        <span class="dot" onclick="currentSlide(6)"></span>
+        <span class="dot" onclick="currentSlide(7)"></span>
+        <span class="dot" onclick="currentSlide(8)"></span>
+        <span class="dot" onclick="currentSlide(9)"></span>
+        <span class="dot" onclick="currentSlide(10)"></span>
+        <span class="dot" onclick="currentSlide(11)"></span>
+        <span class="dot" onclick="currentSlide(12)"></span>
+        <span class="dot" onclick="currentSlide(13)"></span>
+        <span class="dot" onclick="currentSlide(14)"></span>
+    </div>
+
+    <script>
+        let slideIndex = 1;
+        showSlides(slideIndex);
+
+        // Auto play
+        let autoPlay = setInterval(() => {
+            plusSlides(1);
+        }, 4000);
+
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+            resetTimer();
+        }
+
+        function currentSlide(n) {
+            showSlides(slideIndex = n);
+            resetTimer();
+        }
+
+        function showSlides(n) {
+            let i;
+            let slides = document.getElementsByClassName("slide");
+            let dots = document.getElementsByClassName("dot");
+            let captionText = document.getElementById("slide-caption");
+            let captions = [
+                "Every moment with you is a dream...",
+                "Our smiles say it all ❤️",
+                "Adventuring together, forever.",
+                "The way you look at me...",
+                "A perfect cafe date ☕",
+                "Wrapped in your love...",
+                "A beautiful bond 💫",
+                "Creating memories...",
+                "Together is a wonderful place to be",
+                "Endless love...",
+                "A million times over, I will always choose you.",
+                "Sunsets and you...",
+                "My happy place.",
+                "Holding your hand is my favorite thing to do."
+            ];
+
+            if (n > slides.length) { slideIndex = 1 }
+            if (n < 1) { slideIndex = slides.length }
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active", "");
+            }
+            slides[slideIndex - 1].style.display = "block";
+            dots[slideIndex - 1].className += " active";
+            captionText.innerHTML = captions[slideIndex - 1];
+        }
+
+        function resetTimer() {
+            clearInterval(autoPlay);
+            autoPlay = setInterval(() => {
+                plusSlides(1);
+            }, 6000);
+        }
+
+        // Floating Hearts
+        function createHearts() {
+            const container = document.getElementById('floating-hearts');
+            const heart = document.createElement('div');
+            heart.innerHTML = '❤️';
+            heart.style.position = 'absolute';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.top = '100vh';
+            heart.style.fontSize = Math.random() * 20 + 10 + 'px';
+            heart.style.opacity = Math.random() * 0.5 + 0.2;
+            heart.style.transition = 'all 5s linear';
+            heart.style.pointerEvents = 'none';
+            container.appendChild(heart);
+
+            setTimeout(() => {
+                heart.style.transform = `translateY(-110vh) translateX(${Math.random() * 100 - 50}px) rotate(${Math.random() * 360}deg)`;
+            }, 100);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 6000);
+        }
+
+        setInterval(createHearts, 300);
+    </script>
+</body>
+
+</html>

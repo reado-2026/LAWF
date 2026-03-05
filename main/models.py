@@ -1,3 +1,3 @@
 from django.db import models
 
-# Create your models here.
+# No database models needed for the static gallery.
