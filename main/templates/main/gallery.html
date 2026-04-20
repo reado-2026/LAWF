@@ -184,6 +184,16 @@
             background-image: radial-gradient(circle at 50% 50%, rgba(255, 107, 129, 0.05) 0%, transparent 80%);
         }
 
+        .gallery-title {
+            position: fixed;
+            top: 50px;
+            color: var(--primary);
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
+            z-index: 10;
+        }
+
         @media screen and (max-width: 768px) {
             .next {
                 right: 10px;
@@ -197,6 +207,46 @@
 
             .slideshow-container {
                 width: 95vw;
+                height: 60vh;
+                margin-top: 50px;
+                /* Leave space for title */
+                padding: 10px;
+            }
+
+            .gallery-title {
+                top: 25px;
+                font-size: 2.2rem;
+            }
+
+            .caption-text {
+                font-size: 1.5rem;
+                bottom: -50px;
+                padding: 10px;
+            }
+
+            .back-home {
+                top: 20px;
+                left: 10px;
+                font-size: 0.9rem;
+                padding: 8px 12px;
+            }
+
+            .dot {
+                height: 8px;
+                width: 8px;
+                margin: 0 3px;
+            }
+        }
+
+        @media screen and (max-height: 700px) {
+            .slideshow-container {
+                height: 55vh;
+            }
+
+            .gallery-title {
+                top: 20px;
+                position: absolute;
+                /* Allow scrolling if really short */
             }
         }
     </style>
@@ -209,9 +259,7 @@
     </div>
     <div class="heart-bg" id="floating-hearts"></div>
 
-    <h1
-        style="position: fixed; top: 100px; color: var(--primary); font-family: 'Dancing Script', cursive; font-size: 3rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.05);">
-        Our Romantic Journey</h1>
+    <h1 class="gallery-title">Our Romantic Journey</h1>
 
     <a href="{% url 'home' %}" class="back-home">← Back to Love</a>
 
