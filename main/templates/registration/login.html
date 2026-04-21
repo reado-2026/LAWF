@@ -1,0 +1,170 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Our Secret Space</title>
+    <link rel="stylesheet" href="{% static 'main/style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #fff0f3 0%, #ffe6e9 100%);
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 30px;
+            box-shadow: 0 15px 45px rgba(255, 107, 129, 0.15);
+            text-align: center;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            color: #ff6b81;
+            margin-bottom: 1rem;
+        }
+
+        .login-subtitle {
+            color: #636e72;
+            margin-bottom: 2.5rem;
+            font-weight: 300;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #2d3436;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding-left: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid transparent;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #ff6b81;
+            background: white;
+            box-shadow: 0 8px 20px rgba(255, 107, 129, 0.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: #ff6b81;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 8px 25px rgba(255, 107, 129, 0.3);
+            margin-top: 1rem;
+        }
+
+        .submit-btn:hover {
+            background: #ff4757;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(255, 107, 129, 0.4);
+        }
+
+        .error-msg {
+            color: #ff4757;
+            background: rgba(255, 71, 87, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 2rem;
+            color: #ff6b81;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .back-link:hover {
+            color: #ff4757;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <div class="login-container">
+        <h1 class="login-title">Welcome Back</h1>
+        <p class="login-subtitle">Enter your secret space of Love.</p>
+
+        {% if form.errors %}
+        <div class="error-msg">
+            Invalid username or password. Please try again.
+        </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_username">Username</label>
+                <input type="text" name="username" id="id_username" required placeholder="Your unique name">
+            </div>
+            <div class="form-group">
+                <label for="id_password">Password</label>
+                <input type="password" name="password" id="id_password" required placeholder="Our secret key">
+            </div>
+
+            <button type="submit" class="submit-btn">Unlock Love ❤️</button>
+        </form>
+
+        <a href="{% url 'home' %}" class="back-link">Return to Home</a>
+        <p style="margin-top: 20px; font-size: 0.9rem; color: #636e72;">
+            Don't have an account? <a href="{% url 'register' %}" style="color: #ff6b81; text-decoration: none; font-weight: 600;">Register here</a>
+        </p>
+    </div>
+</body>
+
+</html>

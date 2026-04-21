@@ -5,87 +5,224 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Do you love me? | Premium Edition</title>
+  <title>Our Love Story | Forever & Always</title>
   <link rel="stylesheet" href="{% static 'main/style.css' %}" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Outfit:wght@300;400;600;700&family=Quicksand:wght@300;400;600&display=swap"
+    rel="stylesheet">
 </head>
 
 <body>
+  <!-- Floating Background Elements -->
   <div class="background-blobs">
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
   </div>
 
-  <div id="heart-canvas-container"></div>
+  <nav class="navbar">
+    <div class="logo">A&A</div>
+    <ul class="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#story">Our Story</a></li>
+      <li><a href="{% url 'gallery' %}">Gallery</a></li>
+      {% if user.is_authenticated %}
+      <li><a href="{% url 'logout' %}">Logout</a></li>
+      <li class="user-greeting">Hi, {{ user.username }}</li>
+      {% else %}
+      <li><a href="{% url 'login' %}" class="login-link">Login</a></li>
+      {% endif %}
+    </ul>
+  </nav>
 
-  <div id="mo-animation-container">
-    <div class="mo-inner">
-      <svg class="svg-container" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 200">
-        <line class="line line--left" x1="10" y1="17" x2="10" y2="183"> </line>
-        <line class="line line--rght" x1="490" y1="17" x2="490" y2="183"> </line>
-        <g>
-          <path class="lttr lttr--I" d="M42.2,73.9h11.4v52.1H42.2V73.9z"></path>
-          <path class="lttr lttr--L" d="M85.1,73.9h11.4v42.1h22.8v10H85.1V73.9z"></path>
-          <path class="lttr lttr--O"
-            d="M123.9,100c0-15.2,11.7-26.9,27.2-26.9s27.2,11.7,27.2,26.9s-11.7,26.9-27.2,26.9S123.9,115.2,123.9,100zM166.9,100c0-9.2-6.8-16.5-15.8-16.5c-9,0-15.8,7.3-15.8,16.5s6.8,16.5,15.8,16.5C160.1,116.5,166.9,109.2,166.9,100z">
-          </path>
-          <path class="lttr lttr--V"
-            d="M180.7,73.9H193l8.4,22.9c1.7,4.7,3.5,9.5,5,14.2h0.1c1.7-4.8,3.4-9.4,5.2-14.3l8.6-22.8h11.7l-19.9,52.1h-11.5L180.7,73.9z">
-          </path>
-          <path class="lttr lttr--E" d="M239.1,73.9h32.2v10h-20.7v10.2h17.9v9.5h-17.9v12.4H272v10h-33V73.9z"></path>
-          <path class="lttr lttr--Y"
-            d="M315.8,102.5l-20.1-28.6H309l6.3,9.4c2,3,4.2,6.4,6.3,9.6h0.1c2-3.2,4.1-6.4,6.3-9.6l6.3-9.4h12.9l-19.9,28.5v23.6h-11.4V102.5z">
-          </path>
-          <path class="lttr lttr--O2"
-            d="M348.8,100c0-15.2,11.7-26.9,27.2-26.9c15.5,0,27.2,11.7,27.2,26.9s-11.7,26.9-27.2,26.9C360.5,126.9,348.8,115.2,348.8,100z M391.8,100c0-9.2-6.8-16.5-15.8-16.5c-9,0-15.8,7.3-15.8,16.5s6.8,16.5,15.8,16.5C385,116.5,391.8,109.2,391.8,100z">
-          </path>
-          <path class="lttr lttr--U"
-            d="M412.4,101.1V73.9h11.4v26.7c0,10.9,2.4,15.9,11.5,15.9c8.4,0,11.4-4.6,11.4-15.8V73.9h11v26.9c0,7.8-1.1,13.5-4,17.7c-3.7,5.3-10.4,8.4-18.7,8.4c-8.4,0-15.1-3.1-18.8-8.5C413.4,114.2,412.4,108.5,412.4,101.1z">
-          </path>
-        </g>
-      </svg>
+  <header id="home" class="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">Every Love Story is Beautiful, but ours is my <span class="highlight">favorite</span>.</h1>
+      <p class="hero-subtitle">Dedicated to the one who makes my heart skip a beat.</p>
+      <a href="{% url 'gallery' %}" class="cta-button">Explore Our Journey</a>
     </div>
-  </div>
-
-  <div class="question-container container">
-    <video class="local-gif" src="{% static 'main/Reply me love.mp4' %}" autoplay muted loop></video>
-    <h2 class="question">Do you love me?</h2>
-    <div class="button-container">
-      <button class="yes-btn btn js-yes-btn">Yes</button>
-      <button class="no-btn btn js-no-btn">No</button>
+    <div class="hero-image-container">
+      <img src="{% static 'main/romantic_hero.png' %}" alt="Romantic Moment" class="hero-image">
+      <div class="image-overlay"></div>
     </div>
-  </div>
+  </header>
 
-  <div class="loader-wrapper">
-    <div class="cssload-heart"></div>
-    <p>Thinking...</p>
-  </div>
+  <section id="story" class="section story-section">
+    <div class="section-container">
+      <h2 class="section-title">The Beginning</h2>
+      <div class="story-grid">
+        <div class="story-text">
+          <p>It all started with a simple hello, but in that moment, the world seemed to stop. Every day since then has
+            been an adventure filled with laughter, shared dreams, and a love that grows deeper with every sunset.</p>
+          <p>We've built a world where every smile is a treasure and every challenge is just another step on our path
+            together. This is where we celebrate our moments, big and small.</p>
+        </div>
+        <div class="story-card">
+          <div class="card-inner">
+            <span class="date">Aug 14, 2023</span>
+            <h3>The Day We Met</h3>
+            <p>A moment etched in time, never to be forgotten.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <div class="result-container container">
-    <video class="gif-result" src="{% static 'main/Love me.mp4' %}" autoplay loop></video>
-    <h2>I knew it😍!</h2>
-    <a href="{% url 'gallery' %}" class="btn yes-btn"
-      style="display: inline-block; margin-top: 2rem; text-decoration: none; padding: 15px 40px; border-radius: 50px; font-size: 1.2rem; box-shadow: 0 10px 20px rgba(255, 107, 129, 0.3);">Our
-      Romantic Journey 💖</a>
-  </div>
+  <section id="moments" class="section moments-section">
+    <div class="section-container">
+      <h2 class="section-title">Captured Moments</h2>
 
-  <audio class="blup" style="display: none">
-    <source src="https://www.freesound.org/data/previews/265/265115_4373976-lq.mp3" type="audio/ogg">
-  </audio>
-  <audio class="blop" style="display: none">
-    <source src="https://www.freesound.org/data/previews/265/265115_4373976-lq.mp3" type="audio/ogg">
-  </audio>
+      <div class="index-slideshow-container">
+        <div class="index-slide fade">
+          <img src="{% static 'main/gallery/gallery1.png' %}" class="slideshow-img">
+        </div>
+        <div class="index-slide fade">
+          <img src="{% static 'main/gallery/gallery2.png' %}" class="slideshow-img">
+        </div>
+        <div class="index-slide fade">
+          <img src="{% static 'main/gallery/gallery3.jpg' %}" class="slideshow-img">
+        </div>
+        <div class="index-slide fade">
+          <img src="{% static 'main/gallery/gallery4.jpg' %}" class="slideshow-img">
+        </div>
+        <div class="index-slide fade">
+          <img src="{% static 'main/gallery/gallery5.jpg' %}" class="slideshow-img">
+        </div>
+        <div class="index-slide fade">
+          <img src="{% static 'main/gallery/gallery6.jpg' %}" class="slideshow-img">
+        </div>
+        <div class="index-slide fade">
+          <img src="{% static 'main/gallery/gallery7.jpg' %}" class="slideshow-img">
+        </div>
+        <div class="index-slide fade">
+          <img src="{% static 'main/gallery/gallery8.jpg' %}" class="slideshow-img">
+        </div>
+        <div class="index-slide fade">
+          <img src="{% static 'main/gallery/gallery9.png' %}" class="slideshow-img">
+        </div>
+        <div class="index-slide fade">
+          <img src="{% static 'main/gallery/gallery10.jpg' %}" class="slideshow-img">
+        </div>
+        <div class="index-slide fade">
+          <img src="{% static 'main/gallery/gallery11.png' %}" class="slideshow-img">
+        </div>
+        <div class="index-slide fade">
+          <img src="{% static 'main/gallery/gallery12.jpg' %}" class="slideshow-img">
+        </div>
+        <div class="index-slide fade">
+          <img src="{% static 'main/gallery/gallery13.jpg' %}" class="slideshow-img">
+        </div>
+        <div class="index-slide fade">
+          <img src="{% static 'main/gallery/gallery14.jpg' %}" class="slideshow-img">
+        </div>
 
-  <svg id="heart-svg-path" viewBox="0 0 600 552">
-    <path
-      d="M300,107.77C284.68,55.67,239.76,0,162.31,0,64.83,0,0,82.08,0,171.71c0,.48,0,.95,0,1.43-.52,19.5,0,217.94,299.87,379.69v0l0,0,.05,0,0,0,0,0v0C600,391.08,600.48,192.64,600,173.14c0-.48,0-.95,0-1.43C600,82.08,535.17,0,437.69,0,360.24,0,315.32,55.67,300,107.77" />
-  </svg>
+        <a class="index-prev" onclick="changeIndexSlide(-1)">❮</a>
+        <a class="index-next" onclick="changeIndexSlide(1)">❯</a>
+      </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/three@0.136.0/build/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.136.0/examples/js/controls/OrbitControls.js"></script>
+      <div class="center-btn">
+        <a href="{% url 'gallery' %}" class="btn-outline">Immerse in Our Journey 💖</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="message" class="section message-section">
+    <div class="section-container">
+      <div class="message-card">
+        <div class="quote-icon">"</div>
+        <p class="quote-text">I love you not because of who you are, but because of who I am when I am with you.</p>
+        <span class="quote-author">— Eternal Love</span>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>Made with ❤️ for You</p>
+    <div class="scroll-top" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑</div>
+  </footer>
+
+  <!-- Scripts -->
   <script src="https://unpkg.co/gsap@3/dist/gsap.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/mojs/latest/mo.min.js"></script>
-  <script src="{% static 'main/script.js' %}"></script>
+  <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
 
+    // Hero Animations
+    gsap.from(".hero-content *", {
+      y: 50,
+      opacity: 0,
+      duration: 1,
+      stagger: 0.2,
+      ease: "power3.out"
+    });
+
+    gsap.from(".hero-image", {
+      scale: 1.2,
+      opacity: 0,
+      duration: 1.5,
+      ease: "power2.out"
+    });
+
+    // Section Animations
+    gsap.utils.toArray('.section-title').forEach(title => {
+      gsap.from(title, {
+        scrollTrigger: {
+          trigger: title,
+          start: "top 80%",
+        },
+        y: 30,
+        opacity: 0,
+        duration: 0.8
+      });
+    });
+
+    gsap.from(".story-text p", {
+      scrollTrigger: {
+        trigger: ".story-text",
+        start: "top 80%",
+      },
+      x: -50,
+      opacity: 0,
+      duration: 1,
+      stagger: 0.3
+    });
+
+    gsap.from(".moment-box", {
+      scrollTrigger: {
+        trigger: ".moments-grid",
+        start: "top 70%",
+      },
+      scale: 0.8,
+      opacity: 0,
+      duration: 0.8,
+      stagger: 0.2
+    });
+
+    // Home Page Slideshow Logic
+    let indexSlideIdx = 0;
+    showIndexSlides();
+
+    function changeIndexSlide(n) {
+      showIndexSlides(indexSlideIdx += n);
+    }
+
+    function showIndexSlides() {
+      let i;
+      let slides = document.getElementsByClassName("index-slide");
+      if (indexSlideIdx >= slides.length) { indexSlideIdx = 0 }
+      if (indexSlideIdx < 0) { indexSlideIdx = slides.length - 1 }
+      for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
+      }
+      slides[indexSlideIdx].style.display = "block";
+    }
+
+    // Auto play every 4 seconds
+    setInterval(() => {
+      indexSlideIdx++;
+      showIndexSlides();
+    }, 4000);
+  </script>
 </body>
 
 </html>
