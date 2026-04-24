@@ -1,0 +1,729 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Her | My Most Beautiful Dream</title>
+
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Outfit:wght@300;400;600&family=Quicksand:wght@300;600&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #ff007f;
+            --secondary: #ff4d94;
+            --accent: #ff80bf;
+            --glass: rgba(15, 15, 15, 0.85);
+            --glass-border: rgba(255, 0, 127, 0.3);
+            --text-dark: #f0f0f0;
+            --bg-dark: #050505;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a000a 100%);
+            min-height: 100vh;
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+            color: var(--text-dark);
+        }
+
+        /* Floating Background */
+        .bg-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .heart {
+            position: absolute;
+            color: var(--primary);
+            opacity: 0.3;
+            animation: float 6s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+
+        /* Header */
+        header {
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px rgba(255, 0, 127, 0.5);
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--secondary);
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* Gallery Container */
+        .gallery-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            z-index: 5;
+        }
+
+        .swiper {
+            width: 100%;
+            padding-top: 50px;
+            padding-bottom: 100px;
+        }
+
+        .swiper-slide {
+            background-position: center;
+            background-size: cover;
+            width: 320px;
+            height: 480px;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.2);
+            transition: transform 0.5s;
+            position: relative;
+            border: 1px solid var(--glass-border);
+            background: #111;
+        }
+
+        .swiper-slide-active {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(255, 0, 127, 0.5);
+            border: 2px solid var(--primary);
+        }
+
+        .swiper-slide img, .swiper-slide video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .media-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 30px 20px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            color: white;
+            opacity: 0;
+            transition: 0.4s;
+            text-align: center;
+        }
+
+        .swiper-slide-active .media-caption {
+            opacity: 1;
+        }
+
+        .media-caption h3 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(255, 0, 127, 0.5);
+        }
+
+        /* Controls */
+        .nav-btn {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 100;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border-radius: 50px;
+            background: #111;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.3);
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px rgba(255, 0, 127, 0.6);
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            z-index: 100;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #111;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            text-decoration: none;
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.3);
+            font-size: 1.5rem;
+            transition: 0.3s;
+            border: 1px solid var(--glass-border);
+        }
+
+        .back-btn:hover {
+            transform: scale(1.1);
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Video Play Overlay */
+        .video-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            backdrop-filter: blur(5px);
+        }
+
+        .video-overlay::after {
+            content: '▶';
+            color: white;
+            font-size: 1.5rem;
+            margin-left: 5px;
+        }
+
+        .is-playing .video-overlay {
+            display: none;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .title { font-size: 3rem; }
+            .swiper-slide { width: 280px; height: 420px; }
+            .btn { padding: 12px 20px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-elements" id="bg-elements"></div>
+
+    <a href="{% url 'home' %}" class="back-btn">←</a>
+
+    <header>
+        <h1 class="title">Everything for You</h1>
+        <p class="subtitle">My Love, My Life, My Everything</p>
+    </header>
+
+    <div class="gallery-wrapper">
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                <!-- Video 1 -->
+                <div class="swiper-slide video-slide">
+                    <video loop playsinline>
+                        <source src="{% static 'main/anu/WhatsApp Video 2026-04-24 at 1.08.47 PM (1).mp4' %}" type="video/mp4">
+                    </video>
+                    <div class="video-overlay"></div>
+                    <div class="media-caption">
+                        <h3>Captured Magic</h3>
+                        <p>Every second with you is a gift.</p>
+                    </div>
+                </div>
+
+                <!-- Photo 1 -->
+                <div class="swiper-slide">
+                    <img src="{% static 'main/anu/IMG-20250326-WA0038.jpg' %}" alt="Beautiful Moment">
+                    <div class="media-caption">
+                        <h3>Your Smile</h3>
+                        <p>It's my favorite view in the world.</p>
+                    </div>
+                </div>
+
+                <!-- Video 2 -->
+                <div class="swiper-slide video-slide">
+                    <video loop playsinline>
+                        <source src="{% static 'main/anu/WhatsApp Video 2026-04-24 at 1.08.47 PM.mp4' %}" type="video/mp4">
+                    </video>
+                    <div class="video-overlay"></div>
+                    <div class="media-caption">
+                        <h3>Our Little Moments</h3>
+                        <p>The ones I'll cherish forever.</p>
+                    </div>
+                </div>
+
+                <!-- Photo 2 -->
+                <div class="swiper-slide">
+                    <img src="{% static 'main/anu/IMG-20250326-WA0049.jpg' %}" alt="Beautiful Moment">
+                    <div class="media-caption">
+                        <h3>Radiance</h3>
+                        <p>You shine brighter than any star.</p>
+                    </div>
+                </div>
+
+                <!-- Video 3 -->
+                <div class="swiper-slide video-slide">
+                    <video loop playsinline>
+                        <source src="{% static 'main/anu/WhatsApp Video 2026-04-24 at 1.08.48 PM (1).mp4' %}" type="video/mp4">
+                    </video>
+                    <div class="video-overlay"></div>
+                    <div class="media-caption">
+                        <h3>Pure Happiness</h3>
+                        <p>Found only in your presence.</p>
+                    </div>
+                </div>
+
+                <!-- Photo 3 -->
+                <div class="swiper-slide">
+                    <img src="{% static 'main/anu/IMG-20250502-WA0018.jpg' %}" alt="Beautiful Moment">
+                    <div class="media-caption">
+                        <h3>Timeless</h3>
+                        <p>Like our love, beautiful and eternal.</p>
+                    </div>
+                </div>
+
+                <!-- Video 4 -->
+                <div class="swiper-slide video-slide">
+                    <video loop playsinline>
+                        <source src="{% static 'main/anu/WhatsApp Video 2026-04-24 at 1.08.48 PM (2).mp4' %}" type="video/mp4">
+                    </video>
+                    <div class="video-overlay"></div>
+                    <div class="media-caption">
+                        <h3>My Whole Heart</h3>
+                        <p>Belongs to no one but you.</p>
+                    </div>
+                </div>
+
+                <!-- Photo 4 -->
+                <div class="swiper-slide">
+                    <img src="{% static 'main/anu/IMG-20250815-WA0208.jpg' %}" alt="Beautiful Moment">
+                    <div class="media-caption">
+                        <h3>Elegance</h3>
+                        <p>In everything you do.</p>
+                    </div>
+                </div>
+
+                <!-- Video 5 -->
+                <div class="swiper-slide video-slide">
+                    <video loop playsinline>
+                        <source src="{% static 'main/anu/WhatsApp Video 2026-04-24 at 1.08.48 PM.mp4' %}" type="video/mp4">
+                    </video>
+                    <div class="video-overlay"></div>
+                    <div class="media-caption">
+                        <h3>Endless Joy</h3>
+                        <p>Thank you for being mine.</p>
+                    </div>
+                </div>
+
+                <!-- Photo 5 -->
+                <div class="swiper-slide">
+                    <img src="{% static 'main/anu/IMG-20250829-WA0047.jpg' %}" alt="Beautiful Moment">
+                    <div class="media-caption">
+                        <h3>Forever</h3>
+                        <p>Is just the beginning with you.</p>
+                    </div>
+                </div>
+
+                <!-- New Image 1 -->
+                <div class="swiper-slide">
+                    <img src="{% static 'main/anu/WhatsApp Image 2026-04-24 at 1.32.18 PM.jpeg' %}" alt="Beautiful Moment">
+                    <div class="media-caption">
+                        <h3>Pure Magic</h3>
+                        <p>Every glance is a story.</p>
+                    </div>
+                </div>
+
+                <!-- New Image 2 -->
+                <div class="swiper-slide">
+                    <img src="{% static 'main/anu/WhatsApp Image 2026-04-24 at 1.32.19 PM.jpeg' %}" alt="Beautiful Moment">
+                    <div class="media-caption">
+                        <h3>Infinite Love</h3>
+                        <p>Lost in your beauty.</p>
+                    </div>
+                </div>
+
+                <!-- New Image 3 -->
+                <div class="swiper-slide">
+                    <img src="{% static 'main/anu/WhatsApp Image 2026-04-24 at 1.32.20 PM (1).jpeg' %}" alt="Beautiful Moment">
+                    <div class="media-caption">
+                        <h3>Our Bond</h3>
+                        <p>Stronger than ever.</p>
+                    </div>
+                </div>
+
+                <!-- New Image 4 -->
+                <div class="swiper-slide">
+                    <img src="{% static 'main/anu/WhatsApp Image 2026-04-24 at 1.32.20 PM.jpeg' %}" alt="Beautiful Moment">
+                    <div class="media-caption">
+                        <h3>Dreamy</h3>
+                        <p>You are my favorite dream.</p>
+                    </div>
+                </div>
+
+                <!-- New Image 5 -->
+                <div class="swiper-slide">
+                    <img src="{% static 'main/anu/anuuuu.jpeg' %}" alt="Beautiful Moment">
+                    <div class="media-caption">
+                        <h3>Anu</h3>
+                        <p>The name that makes my heart beat.</p>
+                    </div>
+                </div>
+
+                <!-- New Image 6 -->
+                <div class="swiper-slide">
+                    <img src="{% static 'main/anu/image.png' %}" alt="Beautiful Moment">
+                    <div class="media-caption">
+                        <h3>Perfection</h3>
+                        <p>Captured in a frame.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+
+    <div class="nav-btn">
+        <a href="{% url 'gallery' %}" class="btn">View All Photos ✨</a>
+        <div class="btn" id="music-toggle" style="cursor: pointer;">
+            <span id="music-icon">🎵</span> Play Music
+        </div>
+    </div>
+
+    <!-- I Love You Animation Section -->
+    <div id="love-anim-section" style="padding: 100px 20px; display: flex; flex-direction: column; align-items: center; background: #050505; margin-top: 50px; border-radius: 50px 50px 0 0; box-shadow: 0 -20px 40px rgba(255,0,127,0.05);">
+        <div class="container" style="width: 500px; height: 200px; position: relative; max-width: 95vw;">
+            <svg class="svg-container" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 200" style="z-index: 2; position: absolute; width: 100%; height: 100%;">
+                <line class="line line--left" x1="10" y1="17" x2="10" y2="183" style="fill: none; stroke: #ff4d6d; stroke-width: 8; stroke-linecap: round;"> </line>
+                <line class="line line--rght" x1="490" y1="17" x2="490" y2="183" style="fill: none; stroke: #ff4d6d; stroke-width: 8; stroke-linecap: round;"> </line>
+                <g>
+                    <path class="lttr lttr--I" d="M42.2,73.9h11.4v52.1H42.2V73.9z" style="fill: #ff758f;"></path>
+                    <path class="lttr lttr--L" d="M85.1,73.9h11.4v42.1h22.8v10H85.1V73.9z" style="fill: #ff758f;"></path>
+                    <path class="lttr lttr--O" d="M123.9,100c0-15.2,11.7-26.9,27.2-26.9s27.2,11.7,27.2,26.9s-11.7,26.9-27.2,26.9S123.9,115.2,123.9,100zM166.9,100c0-9.2-6.8-16.5-15.8-16.5c-9,0-15.8,7.3-15.8,16.5s6.8,16.5,15.8,16.5C160.1,116.5,166.9,109.2,166.9,100z" style="fill: #ff758f;"> </path>
+                    <path class="lttr lttr--V" d="M180.7,73.9H193l8.4,22.9c1.7,4.7,3.5,9.5,5,14.2h0.1c1.7-4.8,3.4-9.4,5.2-14.3l8.6-22.8h11.7l-19.9,52.1h-11.5L180.7,73.9z" style="fill: #ff758f;"></path>
+                    <path class="lttr lttr--E" d="M239.1,73.9h32.2v10h-20.7v10.2h17.9v9.5h-17.9v12.4H272v10h-33V73.9z" style="fill: #ff758f;"></path>
+                    <path class="lttr lttr--Y" d="M315.8,102.5l-20.1-28.6H309l6.3,9.4c2,3,4.2,6.4,6.3,9.6h0.1c2-3.2,4.1-6.4,6.3-9.6l6.3-9.4h12.9l-19.9,28.5v23.6h-11.4V102.5z" style="fill: #ff758f;"></path>
+                    <path class="lttr lttr--O2" d="M348.8,100c0-15.2,11.7-26.9,27.2-26.9c15.5,0,27.2,11.7,27.2,26.9s-11.7,26.9-27.2,26.9C360.5,126.9,348.8,115.2,348.8,100z M391.8,100c0-9.2-6.8-16.5-15.8-16.5c-9,0-15.8,7.3-15.8,16.5s6.8,16.5,15.8,16.5C385,116.5,391.8,109.2,391.8,100z" style="fill: #ff758f;"></path>
+                    <path class="lttr lttr--U" d="M412.4,101.1V73.9h11.4v26.7c0,10.9,2.4,15.9,11.5,15.9c8.4,0,11.4-4.6,11.4-15.8V73.9h11v26.9c0,7.8-1.1,13.5-4,17.7c-3.7,5.3-10.4,8.4-18.7,8.4c-8.4,0-15.1-3.1-18.8-8.5C413.4,114.2,412.4,108.5,412.4,101.1z" style="fill: #ff758f;"></path>
+                </g>
+            </svg>
+            <div class="mo-container" style="width: 100%; height: 100%;"> </div>
+        </div>
+        <p style="margin-top: 30px; font-family: 'Dancing Script', cursive; font-size: 2rem; color: var(--primary);">Forever Yours...</p>
+    </div>
+
+    <footer style="padding: 40px; text-align: center; background: #000; color: var(--secondary); font-weight: 600; border-top: 1px solid var(--glass-border);">
+        <p style="text-shadow: 0 0 10px rgba(255,0,127,0.3);">Created with all my Love ❤️</p>
+    </footer>
+
+    <audio id="bg-music" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- Mo.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@mojs/core"></script>
+
+    <div class="romantic-message" style="max-width: 800px; margin: 40px auto; padding: 40px; background: #0f0f0f; border-radius: 30px; box-shadow: 0 0 20px rgba(255,0,127,0.1); text-align: center; border: 1px solid var(--glass-border); position: relative; z-index: 5;">
+        <h2 style="font-family: 'Dancing Script', cursive; font-size: 3rem; color: var(--primary); margin-bottom: 20px; text-shadow: 0 0 10px rgba(255,0,127,0.3);">To My Dearest...</h2>
+        <p style="font-size: 1.2rem; line-height: 1.8; color: #ddd; font-style: italic;" id="typed-text">
+            Every moment I spend with you is like a beautiful dream come true. You are my light, my heart, and my greatest adventure. This gallery is just a small token of my love for you, capturing just a few of the infinite reasons why I love you...
+        </p>
+    </div>
+
+    <script>
+        // GSAP Animations
+        gsap.from(".title", { duration: 1.5, y: -50, opacity: 0, ease: "bounce.out" });
+        gsap.from(".subtitle", { duration: 1.5, y: 50, opacity: 0, delay: 0.5, ease: "power2.out" });
+        gsap.from(".swiper-slide", { duration: 1, scale: 0, opacity: 0, stagger: 0.2, delay: 1, ease: "back.out(1.7)" });
+        gsap.from(".romantic-message", { duration: 1.5, opacity: 0, y: 100, delay: 2, ease: "power3.out" });
+
+        // Mo.js Animation Logic
+        const qs = document.querySelector.bind(document);
+        const easingHeart = mojs.easing.path("M0,100C2.9,86.7,33.6-7.3,46-7.3s15.2,22.7,26,22.7S89,0,100,0");
+
+        const el = {
+            container: qs(".mo-container"),
+            i: qs(".lttr--I"),
+            l: qs(".lttr--L"),
+            o: qs(".lttr--O"),
+            v: qs(".lttr--V"),
+            e: qs(".lttr--E"),
+            y: qs(".lttr--Y"),
+            o2: qs(".lttr--O2"),
+            u: qs(".lttr--U"),
+            lineLeft: qs(".line--left"),
+            lineRight: qs(".line--rght"),
+            colTxt: "#ff007f",
+            colHeart: "#ff007f"
+        };
+
+        class Heart extends mojs.CustomShape {
+            getShape() {
+                return '<path d="M50,88.9C25.5,78.2,0.5,54.4,3.8,31.1S41.3,1.8,50,29.9c8.7-28.2,42.8-22.2,46.2,1.2S74.5,78.2,50,88.9z"/>';
+            }
+            getLength() { return 200; }
+        }
+        mojs.addShape("heart", Heart);
+
+        const crtBoom = (delay = 0, x = 0, rd = 46) => {
+            const parent = el.container;
+            const crcl = new mojs.Shape({
+                shape: "circle",
+                fill: "none",
+                stroke: el.colTxt,
+                strokeWidth: { 5: 0 },
+                radius: { [rd]: [rd + 20] },
+                easing: "quint.out",
+                duration: 500 / 3,
+                parent,
+                delay,
+                x
+            });
+            const brst = new mojs.Burst({
+                radius: { [rd + 15]: 110 },
+                angle: "rand(60, 180)",
+                count: 3,
+                timeline: { delay },
+                parent,
+                x,
+                children: {
+                    radius: [5, 3, 7],
+                    fill: el.colTxt,
+                    scale: { 1: 0, easing: "quad.in" },
+                    pathScale: [0.8, null],
+                    degreeShift: ["rand(13, 60)", null],
+                    duration: 1000 / 3,
+                    easing: "quint.out"
+                }
+            });
+            return [crcl, brst];
+        };
+
+        const crtLoveTl = () => {
+            const move = 1000;
+            const boom = 200;
+            const easing = "sin.inOut";
+            const easingBoom = "sin.in";
+            const easingOut = "sin.out";
+            const opts = { duration: move, easing, opacity: 1 };
+            const delta = 150;
+
+            return new mojs.Timeline().add([
+                new mojs.Tween({
+                    duration: move,
+                    onStart: () => {
+                        [el.i, el.l, el.o, el.v, el.e, el.y, el.o2, el.u].forEach(item => {
+                            item.style.opacity = 1;
+                            item.style.transform = "translate(0px, 0px) rotate(0deg) skew(0deg, 0deg) scale(1, 1)";
+                        });
+                    },
+                    onComplete: () => {
+                        [el.l, el.o, el.v, el.e].forEach(item => item.style.opacity = 0);
+                    }
+                }),
+                new mojs.Tween({
+                    duration: move * 2 + boom,
+                    onComplete: () => {
+                        [el.y, el.o2].forEach(item => item.style.opacity = 0);
+                    }
+                }),
+                new mojs.Tween({
+                    duration: move * 3 + boom * 2 - delta,
+                    onComplete: () => { el.i.style.opacity = 0; }
+                }),
+                new mojs.Tween({
+                    duration: move * 3 + boom * 2,
+                    onComplete: () => { el.u.style.opacity = 0; }
+                }),
+                new mojs.Tween({
+                    duration: 50,
+                    delay: 4050,
+                    onUpdate: progress => {
+                        [el.i, el.l, el.o, el.v, el.e, el.y, el.o2, el.u].forEach(item => {
+                            item.style.opacity = progress;
+                        });
+                    }
+                }),
+                new mojs.Html({ ...opts, el: el.lineLeft, x: { 0: 52 } }).then({ duration: boom + move, easing, x: { to: 106 } }).then({ duration: boom + move, easing, x: { to: 166 } }).then({ duration: 150, easing, x: { to: 176 } }).then({ duration: 300 }).then({ duration: 350, x: { to: 0 }, easing: easingOut }),
+                new mojs.Html({ ...opts, el: el.lineRight, x: { 0: -52 } }).then({ duration: boom + move, easing, x: { to: -106 } }).then({ duration: boom + move, easing, x: { to: -166 } }).then({ duration: 150, easing, x: { to: -176 } }).then({ duration: 300 }).then({ duration: 350, x: { to: 0 }, easing: easingOut }),
+                new mojs.Html({ ...opts, el: el.i, x: { 0: 34 } }).then({ duration: boom, easing: easingBoom, x: { to: 53 } }).then({ duration: move, easing, x: { to: 93 } }).then({ duration: boom, easing: easingBoom, x: { to: 123 } }).then({ duration: move, easing, x: { to: 153 } }),
+                new mojs.Html({ ...opts, el: el.l, x: { 0: 15 } }),
+                new mojs.Html({ ...opts, el: el.o, x: { 0: 11 } }),
+                new mojs.Html({ ...opts, el: el.v, x: { 0: 3 } }),
+                new mojs.Html({ ...opts, el: el.e, x: { 0: -3 } }),
+                new mojs.Html({ ...opts, el: el.y, x: { 0: -20 } }).then({ duration: boom, easing: easingBoom, x: { to: -53 } }).then({ duration: move, easing, x: { to: -77 } }),
+                new mojs.Html({ ...opts, el: el.o2, x: { 0: -27 } }).then({ duration: boom, easing: easingBoom, x: { to: -54 } }).then({ duration: move, easing, x: { to: -84 } }),
+                new mojs.Html({ ...opts, el: el.u, x: { 0: -32 } }).then({ duration: boom, easing: easingBoom, x: { to: -53 } }).then({ duration: move, easing, x: { to: -89 } }).then({ duration: boom, easing: easingBoom, x: { to: -120 } }).then({ duration: move, easing, x: { to: -147 } }),
+                new mojs.Shape({
+                    parent: el.container,
+                    shape: "heart",
+                    delay: move,
+                    fill: el.colHeart,
+                    x: -64,
+                    scale: { 0: 0.95, easing: easingHeart },
+                    duration: 500
+                }).then({ x: { to: -62, easing }, scale: { to: 0.65, easing }, duration: boom + move - 500 }).then({ duration: boom - 50, x: { to: -14 }, scale: { to: 0.9 }, easing: easingBoom }).then({ duration: 125, scale: { to: 0.8 }, easing: easingOut }).then({ duration: 125, scale: { to: 0.85 }, easing: easingOut }).then({ duration: move - 200, scale: { to: 0.45 }, easing }).then({ delay: -75, duration: 150, x: { to: 0 }, scale: { to: 0.9 }, easing: easingBoom }).then({ duration: 125, scale: { to: 0.8 }, easing: easingOut }).then({ duration: 125, scale: { to: 0.85 }, easing: easingOut }).then({ duration: 125 }).then({ duration: 350, scale: { to: 0 }, easing: easingOut }),
+                ...crtBoom(move, -64, 46),
+                ...crtBoom(move * 2 + boom, 18, 34),
+                ...crtBoom(move * 3 + boom * 2 - delta, -64, 34),
+                ...crtBoom(move * 3 + boom * 2, 45, 34)
+            ]);
+        };
+
+        const loveTl = crtLoveTl();
+        
+        // Trigger love animation when in viewport
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    loveTl.play();
+                    setInterval(() => { loveTl.replay(); }, 4300);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        observer.observe(qs("#love-anim-section"));
+
+        // Initialize Swiper
+        const swiper = new Swiper(".mySwiper", {
+            effect: "coverflow",
+            grabCursor: true,
+            centeredSlides: true,
+            slidesPerView: "auto",
+            coverflowEffect: {
+                rotate: 20,
+                stretch: 0,
+                depth: 100,
+                modifier: 1,
+                slideShadows: true,
+            },
+            loop: true,
+            on: {
+                slideChange: function () {
+                    // Pause all videos when slide changes
+                    document.querySelectorAll('video').forEach(video => {
+                        video.pause();
+                        video.closest('.swiper-slide').classList.remove('is-playing');
+                    });
+                    
+                    // Play video if active slide is a video
+                    const activeSlide = this.slides[this.activeIndex];
+                    const video = activeSlide.querySelector('video');
+                    if (video) {
+                        // Attempt to play with sound (will work if user has interacted)
+                        video.play().catch(e => {
+                            console.log("Playback with audio blocked, trying muted...");
+                            video.muted = true;
+                            video.play();
+                        });
+                        activeSlide.classList.add('is-playing');
+                    }
+                }
+            }
+        });
+
+        // Click to play/pause video on active slide and unmute
+        document.querySelectorAll('.video-slide').forEach(slide => {
+            slide.onclick = function() {
+                const video = this.querySelector('video');
+                if (video.paused) {
+                    video.muted = false; // Ensure sound is on when clicked
+                    video.play();
+                    this.classList.add('is-playing');
+                } else {
+                    video.pause();
+                    this.classList.remove('is-playing');
+                }
+            }
+        });
+
+        // Floating Hearts
+        function createHearts() {
+            const container = document.getElementById('bg-elements');
+            for(let i=0; i<15; i++) {
+                const heart = document.createElement('div');
+                heart.innerHTML = '❤️';
+                heart.className = 'heart';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.top = Math.random() * 100 + 'vh';
+                heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                heart.style.animationDelay = Math.random() * 5 + 's';
+                heart.style.opacity = Math.random() * 0.3 + 0.1;
+                container.appendChild(heart);
+            }
+        }
+        createHearts();
+
+        // Music Player
+        const musicBtn = document.getElementById('music-toggle');
+        const music = document.getElementById('bg-music');
+        const icon = document.getElementById('music-icon');
+        let playing = false;
+
+        musicBtn.onclick = () => {
+            if (playing) {
+                music.pause();
+                icon.innerText = '🎵';
+            } else {
+                music.play();
+                icon.innerText = '⏸️';
+            }
+            playing = !playing;
+        };
+    </script>
+</body>
+
+</html>

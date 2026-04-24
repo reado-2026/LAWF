@@ -5,218 +5,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Romantic Journey | Slideshow</title>
-    <link rel="stylesheet" href="{% static 'main/style.css' %}">
+    <title>Our Romantic Journey | Gallery</title>
+
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <!-- Google Fonts -->
     <link
-        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Quicksand:wght@300;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Outfit:wght@300;400;600&family=Quicksand:wght@300;600&display=swap"
         rel="stylesheet">
+
     <style>
+        :root {
+            --primary: #ff007f;
+            --primary-dark: #cc0066;
+            --glass: rgba(15, 15, 15, 0.8);
+            --glass-border: rgba(255, 0, 127, 0.3);
+            --shadow: 0 0 25px rgba(255, 0, 127, 0.3);
+        }
+
         body {
-            background: linear-gradient(135deg, #fff0f3 0%, #ffe6e9 100%);
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a000d 100%);
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            overflow: hidden;
-            font-family: 'Quicksand', sans-serif;
-            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' style='font-size: 20px'><text y='15'>❤️</text></svg>"), auto;
+            color: #eee;
         }
 
-        .gallery-title {
-            position: absolute;
-            top: 40px;
-            color: var(--primary);
-            font-family: 'Dancing Script', cursive;
-            font-size: 4rem;
-            text-shadow: 2px 2px 8px rgba(255, 107, 129, 0.2);
-            z-index: 100;
-            animation: floatingTitle 3s ease-in-out infinite;
-        }
-
-        @keyframes floatingTitle {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .slideshow-container {
-            position: relative;
-            width: 85vw;
-            max-width: 700px;
-            height: 60vh;
-            background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            border-radius: 40px;
-            box-shadow: 0 20px 50px rgba(255, 107, 129, 0.15);
-            padding: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-        }
-
-        .slide {
-            display: none;
-            width: 100%;
-            height: 100%;
-            border-radius: 20px;
-            overflow: hidden;
-            animation: fadeEffect 1.5s;
-        }
-
-        .slide img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            /* Preserve romantic framing */
-            border-radius: 15px;
-            animation: zoomEffect 6s ease-in-out infinite alternate;
-        }
-
-        @keyframes fadeEffect {
-            from {
-                opacity: 0;
-                transform: scale(0.98) translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
-
-        @keyframes zoomEffect {
-            from {
-                transform: scale(1);
-            }
-
-            to {
-                transform: scale(1.05);
-            }
-        }
-
-        .prev,
-        .next {
-            cursor: pointer;
-            position: absolute;
-            top: 50%;
-            width: auto;
-            padding: 16px;
-            margin-top: -22px;
-            color: var(--primary);
-            font-weight: bold;
-            font-size: 24px;
-            transition: 0.6s ease;
-            border-radius: 10px;
-            background: var(--glass);
-            user-select: none;
-            border: 1px solid var(--glass-border);
-        }
-
-        .next {
-            right: -60px;
-        }
-
-        .prev {
-            left: -60px;
-        }
-
-        .prev:hover,
-        .next:hover {
-            background-color: var(--primary);
-            color: white;
-        }
-
-        .caption-text {
-            color: var(--primary);
-            font-size: 2.5rem;
-            padding: 30px;
-            position: absolute;
-            bottom: -90px;
-            width: 100%;
-            text-align: center;
-            font-family: 'Dancing Script', cursive;
-            background: linear-gradient(to right, #ff6b81, #ff4757);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 5px 15px rgba(255, 107, 129, 0.2);
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.5s ease;
-        }
-
-        .slide[style*="display: block"] ~ .caption-text {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Music Player Styling */
-        .music-player {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 100;
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(10px);
-            padding: 10px 20px;
-            border-radius: 50px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border: 1px solid rgba(255, 107, 129, 0.2);
-            color: var(--primary);
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .music-player:hover {
-            background: var(--primary);
-            color: white;
-            transform: scale(1.05);
-        }
-
-        .dot {
-            cursor: pointer;
-            height: 12px;
-            width: 12px;
-            margin: 0 5px;
-            background-color: #bbb;
-            border-radius: 50%;
-            display: inline-block;
-            transition: background-color 0.6s ease;
-        }
-
-        .active,
-        .dot:hover {
-            background-color: var(--primary);
-        }
-
-        .back-home {
-            position: fixed;
-            top: 30px;
-            left: 30px;
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            padding: 10px 20px;
-            border-radius: 15px;
-            text-decoration: none;
-            color: var(--primary);
-            font-weight: 600;
-            z-index: 100;
-            transition: 0.3s;
-        }
-
-        .back-home:hover {
-            transform: translateX(-5px);
-            background: var(--primary);
-            color: white;
-        }
-
-        /* Romantic Overlay */
+        /* Floating Hearts Background */
         .heart-bg {
             position: fixed;
             top: 0;
@@ -225,97 +46,192 @@
             height: 100%;
             z-index: 1;
             pointer-events: none;
-            background-image: radial-gradient(circle at 50% 50%, rgba(255, 107, 129, 0.05) 0%, transparent 80%);
+        }
+
+        .gallery-container {
+            width: 100%;
+            padding: 50px 0;
+            z-index: 10;
+            position: relative;
         }
 
         .gallery-title {
-            position: fixed;
-            top: 50px;
+            text-align: center;
             color: var(--primary);
             font-family: 'Dancing Script', cursive;
-            font-size: 3rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
-            z-index: 10;
+            font-size: 3.5rem;
+            margin-bottom: 40px;
+            text-shadow: 0 0 15px rgba(255, 0, 127, 0.5);
+            animation: floatingTitle 3s ease-in-out infinite;
         }
 
-        @media screen and (max-width: 768px) {
-            .next {
-                right: 10px;
-                opacity: 0.7;
+        @keyframes floatingTitle {
+
+            0%,
+            100% {
+                transform: translateY(0);
             }
 
-            .prev {
-                left: 10px;
-                opacity: 0.7;
-            }
-
-            .slideshow-container {
-                width: 95vw;
-                height: 60vh;
-                margin-top: 50px;
-                /* Leave space for title */
-                padding: 10px;
-            }
-
-            .gallery-title {
-                top: 25px;
-                font-size: 2.2rem;
-            }
-
-            .caption-text {
-                font-size: 1.5rem;
-                bottom: -50px;
-                padding: 10px;
-            }
-
-            .back-home {
-                top: 20px;
-                left: 10px;
-                font-size: 0.9rem;
-                padding: 8px 12px;
-            }
-
-            .dot {
-                height: 8px;
-                width: 8px;
-                margin: 0 3px;
+            50% {
+                transform: translateY(-10px);
             }
         }
 
-        @media screen and (max-height: 700px) {
-            .slideshow-container {
-                height: 55vh;
-            }
-
-            .gallery-title {
-                top: 20px;
-                position: absolute;
-                /* Allow scrolling if really short */
-            }
+        /* Swiper Custom Styles */
+        .swiper {
+            width: 100%;
+            padding-top: 50px;
+            padding-bottom: 80px;
         }
-        @media (max-width: 600px) {
+
+        .swiper-slide {
+            background-position: center;
+            background-size: cover;
+            width: 300px;
+            height: 450px;
+            filter: blur(2px);
+            transition: 0.5s;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.2);
+            border: 8px solid rgba(25, 25, 25, 0.6);
+            background: #111;
+        }
+
+        .swiper-slide-active {
+            filter: blur(0);
+            transform: scale(1.1);
+            border: 8px solid var(--primary);
+            box-shadow: 0 0 40px rgba(255, 0, 127, 0.5);
+        }
+
+        .swiper-slide img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 17px;
+        }
+
+        .slide-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+            color: white;
+            text-align: center;
+            opacity: 0;
+            transition: 0.4s;
+        }
+
+        .swiper-slide-active .slide-content {
+            opacity: 1;
+        }
+
+        .slide-content h3 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            margin: 0;
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(255, 0, 127, 0.5);
+        }
+
+        /* Navigation Buttons */
+        .swiper-button-next,
+        .swiper-button-prev {
+            color: var(--primary);
+            background: var(--glass);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            transition: 0.3s;
+        }
+
+        .swiper-button-next:after,
+        .swiper-button-prev:after {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .swiper-button-next:hover,
+        .swiper-button-prev:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 0 20px var(--primary);
+        }
+
+        .swiper-pagination-bullet-active {
+            background: var(--primary) !important;
+        }
+
+        /* Buttons & Controls */
+        .controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 100;
+        }
+
+        .btn-romantic {
+            background: #111;
+            border: 1px solid var(--glass-border);
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 600;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.2);
+        }
+
+        .btn-romantic:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px rgba(255, 0, 127, 0.6);
+        }
+
+        .back-home {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            z-index: 100;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
             .gallery-title {
                 font-size: 2.5rem;
-                top: 20px;
+                margin-top: 60px;
             }
-            .slideshow-container {
-                width: 95vw;
-                height: 50vh;
-                padding: 10px;
-                border-radius: 20px;
+
+            .swiper-slide {
+                width: 250px;
+                height: 380px;
             }
-            .slide img {
-                border-radius: 15px;
-            }
-            .caption-text {
-                font-size: 1.5rem;
-                bottom: -50px;
-            }
-            .music-player {
+
+            .controls {
+                width: 90%;
+                justify-content: center;
+                flex-wrap: wrap;
                 bottom: 20px;
-                right: 50%;
-                transform: translateX(50%);
-                font-size: 0.8rem;
+            }
+
+            .btn-romantic {
+                padding: 8px 15px;
+                font-size: 0.9rem;
             }
         }
     </style>
@@ -323,154 +239,154 @@
 
 <body>
     <div class="heart-bg" id="floating-hearts"></div>
-    <div class="background-blobs">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
+
+    <a href="{% url 'home' %}" class="btn-romantic back-home">← Back to Love</a>
+
+    <div class="gallery-container">
+        <h1 class="gallery-title">Our Romantic Journey</h1>
+
+        <!-- Swiper -->
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                <!-- Slides -->
+                <div class="swiper-slide">
+                    <img src="{% static 'main/gallery/gallery1.png' %}" alt="Our Moment 1">
+                    <div class="slide-content">
+                        <h3>Every moment with you is a dream...</h3>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <img src="{% static 'main/gallery/gallery2.png' %}" alt="Our Moment 2">
+                    <div class="slide-content">
+                        <h3>Our smiles say it all ❤️</h3>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <img src="{% static 'main/gallery/gallery3.jpg' %}" alt="Our Moment 3">
+                    <div class="slide-content">
+                        <h3>Adventuring together, forever.</h3>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <img src="{% static 'main/gallery/gallery4.jpg' %}" alt="Our Moment 4">
+                    <div class="slide-content">
+                        <h3>The way you look at me...</h3>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <img src="{% static 'main/gallery/gallery5.jpg' %}" alt="Our Moment 5">
+                    <div class="slide-content">
+                        <h3>A perfect cafe date ☕</h3>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <img src="{% static 'main/gallery/gallery6.jpg' %}" alt="Our Moment 6">
+                    <div class="slide-content">
+                        <h3>Wrapped in your love...</h3>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <img src="{% static 'main/gallery/gallery7.jpg' %}" alt="Our Moment 7">
+                    <div class="slide-content">
+                        <h3>A beautiful bond 💫</h3>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <img src="{% static 'main/gallery/gallery8.jpg' %}" alt="Our Moment 8">
+                    <div class="slide-content">
+                        <h3>Creating memories...</h3>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <img src="{% static 'main/gallery/gallery9.png' %}" alt="Our Moment 9">
+                    <div class="slide-content">
+                        <h3>Holding your hand...</h3>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <img src="{% static 'main/gallery/gallery10.jpg' %}" alt="Our Moment 10">
+                    <div class="slide-content">
+                        <h3>Endless love...</h3>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <img src="{% static 'main/gallery/gallery11.png' %}" alt="Our Moment 11">
+                    <div class="slide-content">
+                        <h3>Sunsets and you...</h3>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <img src="{% static 'main/gallery/gallery12.jpg' %}" alt="Our Moment 12">
+                    <div class="slide-content">
+                        <h3>I will always choose you.</h3>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <img src="{% static 'main/gallery/gallery13.jpg' %}" alt="Our Moment 13">
+                    <div class="slide-content">
+                        <h3>Your gifts😘🏎️</h3>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <img src="{% static 'main/gallery/gallery14.jpg' %}" alt="Our Moment 14">
+                    <div class="slide-content">
+                        <h3>Together is a wonderful place to be</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="swiper-pagination"></div>
+
+            <!-- Navigation -->
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
     </div>
 
-    <h1 class="gallery-title">Our Romantic Journey</h1>
-
-    <a href="{% url 'home' %}" class="back-home">← Back to Love</a>
-
-    <div class="music-player" id="music-toggle">
-        <span id="music-icon">🎵</span>
-        <span id="music-text">Play Romantic Music</span>
-        <audio id="romantic-bg-music" loop>
-            <source src="https://www.flute-instrumentals.com/tracks/malayalam-romance-flute.mp3" type="audio/mpeg">
-            <!-- Fallback if the link is slow -->
-            <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
-        </audio>
+    <div class="controls">
+        <div class="btn-romantic" id="music-toggle">
+            <span id="music-icon">🎵</span>
+            <span id="music-text">Play Romantic Music</span>
+        </div>
     </div>
 
-    <div class="slideshow-container">
-        <!-- Slides -->
-        <div class="slide">
-            <img src="{% static 'main/gallery/gallery1.png' %}" alt="Our Moment 1">
-        </div>
-        <div class="slide">
-            <img src="{% static 'main/gallery/gallery2.png' %}" alt="Our Moment 2">
-        </div>
-        <div class="slide">
-            <img src="{% static 'main/gallery/gallery3.jpg' %}" alt="Our Moment 3">
-        </div>
-        <div class="slide">
-            <img src="{% static 'main/gallery/gallery4.jpg' %}" alt="Our Moment 4">
-        </div>
-        <div class="slide">
-            <img src="{% static 'main/gallery/gallery5.jpg' %}" alt="Our Moment 5">
-        </div>
-        <div class="slide">
-            <img src="{% static 'main/gallery/gallery6.jpg' %}" alt="Our Moment 6">
-        </div>
-        <div class="slide">
-            <img src="{% static 'main/gallery/gallery7.jpg' %}" alt="Our Moment 7">
-        </div>
-        <div class="slide">
-            <img src="{% static 'main/gallery/gallery8.jpg' %}" alt="Our Moment 8">
-        </div>
-        <div class="slide">
-            <img src="{% static 'main/gallery/gallery9.png' %}" alt="Our Moment 9">
-        </div>
-        <div class="slide">
-            <img src="{% static 'main/gallery/gallery10.jpg' %}" alt="Our Moment 10">
-        </div>
-        <div class="slide">
-            <img src="{% static 'main/gallery/gallery11.png' %}" alt="Our Moment 11">
-        </div>
-        <div class="slide">
-            <img src="{% static 'main/gallery/gallery12.jpg' %}" alt="Our Moment 12">
-        </div>
-        <div class="slide">
-            <img src="{% static 'main/gallery/gallery13.jpg' %}" alt="Our Moment 13">
-        </div>
-        <div class="slide">
-            <img src="{% static 'main/gallery/gallery14.jpg' %}" alt="Our Moment 14">
-        </div>
+    <audio id="romantic-bg-music" loop>
+        <source src="https://www.flute-instrumentals.com/tracks/malayalam-romance-flute.mp3" type="audio/mpeg">
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+    </audio>
 
-        <!-- Navigation -->
-        <a class="prev" onclick="plusSlides(-1)">❮</a>
-        <a class="next" onclick="plusSlides(1)">❯</a>
-
-        <div id="slide-caption" class="caption-text">Every moment with you is a dream...</div>
-    </div>
-
-    <div class="dots-container">
-        <span class="dot" onclick="currentSlide(1)"></span>
-        <span class="dot" onclick="currentSlide(2)"></span>
-        <span class="dot" onclick="currentSlide(3)"></span>
-        <span class="dot" onclick="currentSlide(4)"></span>
-        <span class="dot" onclick="currentSlide(5)"></span>
-        <span class="dot" onclick="currentSlide(6)"></span>
-        <span class="dot" onclick="currentSlide(7)"></span>
-        <span class="dot" onclick="currentSlide(8)"></span>
-        <span class="dot" onclick="currentSlide(9)"></span>
-        <span class="dot" onclick="currentSlide(10)"></span>
-        <span class="dot" onclick="currentSlide(11)"></span>
-        <span class="dot" onclick="currentSlide(12)"></span>
-        <span class="dot" onclick="currentSlide(13)"></span>
-        <span class="dot" onclick="currentSlide(14)"></span>
-    </div>
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <script>
-        let slideIndex = 1;
-        showSlides(slideIndex);
-
-        // Auto play
-        let autoPlay = setInterval(() => {
-            plusSlides(1);
-        }, 4000);
-
-        function plusSlides(n) {
-            showSlides(slideIndex += n);
-            resetTimer();
-        }
-
-        function currentSlide(n) {
-            showSlides(slideIndex = n);
-            resetTimer();
-        }
-
-        function showSlides(n) {
-            let i;
-            let slides = document.getElementsByClassName("slide");
-            let dots = document.getElementsByClassName("dot");
-            let captionText = document.getElementById("slide-caption");
-            let captions = [
-                "Every moment with you is a dream...",
-                "Our smiles say it all ❤️",
-                "Adventuring together, forever.",
-                "The way you look at me...",
-                "A perfect cafe date ☕",
-                "Wrapped in your love...",
-                "A beautiful bond 💫",
-                "Creating memories...",
-                "Together is a wonderful place to be",
-                "Endless love...",
-                "A million times over, I will always choose you.",
-                "Sunsets and you...",
-                "My happy place.",
-                "Holding your hand is my favorite thing to do."
-            ];
-
-            if (n > slides.length) { slideIndex = 1 }
-            if (n < 1) { slideIndex = slides.length }
-            for (i = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";
-            }
-            for (i = 0; i < dots.length; i++) {
-                dots[i].className = dots[i].className.replace(" active", "");
-            }
-            slides[slideIndex - 1].style.display = "block";
-            dots[slideIndex - 1].className += " active";
-            captionText.innerHTML = captions[slideIndex - 1];
-        }
-
-        function resetTimer() {
-            clearInterval(autoPlay);
-            autoPlay = setInterval(() => {
-                plusSlides(1);
-            }, 6000);
-        }
+        // Initialize Swiper
+        var swiper = new Swiper(".mySwiper", {
+            effect: "coverflow",
+            grabCursor: true,
+            centeredSlides: true,
+            slidesPerView: "auto",
+            coverflowEffect: {
+                rotate: 20,
+                stretch: 0,
+                depth: 100,
+                modifier: 1,
+                slideShadows: true,
+            },
+            loop: true,
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+        });
 
         // Floating Hearts
         function createHearts() {
@@ -484,6 +400,7 @@
             heart.style.opacity = Math.random() * 0.5 + 0.2;
             heart.style.transition = 'all 5s linear';
             heart.style.pointerEvents = 'none';
+            heart.style.color = '#ff007f';
             container.appendChild(heart);
 
             setTimeout(() => {
@@ -510,7 +427,7 @@
                 musicIcon.innerText = '🎵';
                 musicText.innerText = 'Play Romantic Music';
             } else {
-                musicAudio.play();
+                musicAudio.play().catch(e => console.log("Audio play blocked"));
                 musicIcon.innerText = '⏸️';
                 musicText.innerText = 'Now Playing...';
             }

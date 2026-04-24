@@ -11,6 +11,10 @@ def home(request):
 def gallery(request):
     return render(request, 'main/gallery.html')
 
+@login_required
+def she(request):
+    return render(request, 'main/she.html')
+
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
