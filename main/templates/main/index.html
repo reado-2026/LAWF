@@ -588,19 +588,6 @@
               <li><a href={userState.galleryUrl}>Gallery</a></li>
               <li><a href={userState.sheUrl}>Anu ❤️</a></li>
               <li><a href={userState.love3dUrl} style={{ color: 'var(--primary)', fontWeight: '700' }}>3D World ✨</a></li>
-              {userState.isAuthenticated ? (
-                <React.Fragment>
-                  <li>
-                    <form action={userState.logoutUrl} method="post" style={{ display: 'inline' }}>
-                      <input type="hidden" name="csrfmiddlewaretoken" value={userState.csrfToken} />
-                      <button type="submit" style={{ background: 'none', border: 'none', color: 'var(--primary)', fontWeight: '600', fontFamily: 'inherit', fontSize: 'inherit', cursor: 'pointer', padding: '0', transition: '0.3s' }} onMouseOver={(e) => e.target.style.color='white'} onMouseOut={(e) => e.target.style.color='var(--primary)'}>Logout</button>
-                    </form>
-                  </li>
-                  <li className="user-greeting">Hi, {userState.username}</li>
-                </React.Fragment>
-              ) : (
-                <li><a href={userState.loginUrl} className="login-link">Login</a></li>
-              )}
             </ul>
           </nav>
 

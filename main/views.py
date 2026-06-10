@@ -3,19 +3,15 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 
-@login_required
 def home(request):
     return render(request, 'main/index.html')
 
-@login_required
 def gallery(request):
     return render(request, 'main/gallery.html')
 
-@login_required
 def she(request):
     return render(request, 'main/she.html')
 
-@login_required
 def love_3d(request):
     return render(request, 'main/love_3d.html')
 
