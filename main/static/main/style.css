@@ -1,19 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Outfit:wght@300;400;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --primary: #ff007f; /* Neon Rose */
-  --primary-light: #ff4d94;
-  --primary-dark: #cc0066;
-  --secondary: #2d0015;
-  --bg-color: #0a0a0a; /* Deep Black */
-  --text-main: #f0f0f0;
-  --text-muted: #b0b0b0;
+  --primary: #ff2a85; /* Glowing Neon Rose */
+  --primary-light: #ff6ea7; /* Delicate Pink Rose */
+  --primary-dark: #d60062; /* Raspberry Magenta */
+  --secondary: #8a2be2; /* Amethyst Violet */
+  --secondary-light: #b066ff; /* Lavender Dream */
+  --secondary-dark: #4d0099;
+  --bg-color: #06020c; /* Deep Galactic Indigo */
+  --text-main: #f5f2f7;
+  --text-muted: #a39bb0;
   --white: #ffffff;
-  --glass: rgba(20, 20, 20, 0.8);
-  --glass-border: rgba(255, 0, 127, 0.3);
-  --shadow-soft: 0 0 15px rgba(255, 0, 127, 0.2);
-  --shadow-strong: 0 0 30px rgba(255, 0, 127, 0.4);
-  --neon-glow: 0 0 10px rgba(255, 0, 127, 0.5), 0 0 20px rgba(255, 0, 127, 0.3);
+  --glass: rgba(12, 6, 20, 0.82); /* Deep Amethyst Glass */
+  --glass-border: rgba(255, 42, 133, 0.28); /* Glowing Border */
+  --shadow-soft: 0 8px 32px 0 rgba(255, 42, 133, 0.18);
+  --shadow-strong: 0 0 30px rgba(255, 42, 133, 0.45), 0 0 50px rgba(138, 43, 226, 0.3);
+  --neon-glow: 0 0 10px rgba(255, 42, 133, 0.6), 0 0 25px rgba(138, 43, 226, 0.4);
+  --accent: #ffd700; /* Warm Candlelight Gold */
+  --gold-glow: 0 0 15px rgba(255, 215, 0, 0.4);
 }
 
 * {
@@ -24,7 +28,7 @@
 
 html {
   scroll-behavior: smooth;
-  background-color: #000;
+  background-color: #030107;
 }
 
 ::selection {
@@ -36,9 +40,9 @@ body {
   font-family: 'Outfit', sans-serif;
   background-color: var(--bg-color);
   background-image: 
-    linear-gradient(rgba(255, 0, 127, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 0, 127, 0.05) 1px, transparent 1px);
-  background-size: 50px 50px;
+    linear-gradient(rgba(255, 42, 133, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 42, 133, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
   color: var(--text-main);
   line-height: 1.6;
   overflow-x: hidden;
@@ -57,39 +61,40 @@ body {
 
 .blob {
   position: absolute;
-  filter: blur(80px);
-  opacity: 0.4;
+  filter: blur(100px);
+  opacity: 0.5;
   border-radius: 50%;
-  animation: float 20s infinite alternate;
+  animation: float 25s infinite alternate ease-in-out;
 }
 
 .blob-1 {
-  width: 500px;
-  height: 500px;
-  background-color: #3d001a;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(255, 42, 133, 0.18) 0%, rgba(255, 42, 133, 0) 70%);
   top: -10%;
   left: -10%;
 }
 
 .blob-2 {
-  width: 600px;
-  height: 600px;
-  background-color: #1a000d;
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(138, 43, 226, 0.18) 0%, rgba(138, 43, 226, 0) 70%);
   bottom: -10%;
   right: -10%;
 }
 
 .blob-3 {
-  width: 400px;
-  height: 400px;
-  background-color: #4d0026;
-  top: 40%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.08) 0%, rgba(255, 215, 0, 0) 70%);
+  top: 35%;
   right: 15%;
 }
 
 @keyframes float {
-  from { transform: translate(0, 0) scale(1); }
-  to { transform: translate(50px, 30px) scale(1.1); }
+  0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+  50% { transform: translate(60px, 40px) scale(1.1) rotate(180deg); }
+  100% { transform: translate(-30px, 20px) scale(0.95) rotate(360deg); }
 }
 
 /* Navbar */

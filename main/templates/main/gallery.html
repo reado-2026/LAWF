@@ -15,17 +15,26 @@
         href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Outfit:wght@300;400;600&family=Quicksand:wght@300;600&display=swap"
         rel="stylesheet">
 
+    <!-- Link to main style.css for unified background styling and variables -->
+    <link rel="stylesheet" href="{% static 'main/style.css' %}" />
     <style>
         :root {
-            --primary: #ff007f;
-            --primary-dark: #cc0066;
-            --glass: rgba(15, 15, 15, 0.8);
-            --glass-border: rgba(255, 0, 127, 0.3);
-            --shadow: 0 0 25px rgba(255, 0, 127, 0.3);
+            --primary: #ff2a85;
+            --primary-light: #ff6ea7;
+            --primary-dark: #d60062;
+            --secondary: #8a2be2;
+            --secondary-light: #b066ff;
+            --glass: rgba(12, 6, 20, 0.82);
+            --glass-border: rgba(255, 42, 133, 0.28);
+            --shadow: 0 0 25px rgba(255, 42, 133, 0.35);
         }
 
         body {
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a000d 100%);
+            background-color: var(--bg-color);
+            background-image: 
+              linear-gradient(rgba(255, 42, 133, 0.03) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255, 42, 133, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
             min-height: 100vh;
             margin: 0;
             font-family: 'Outfit', sans-serif;
@@ -238,6 +247,13 @@
 </head>
 
 <body>
+    <!-- Background Blobs -->
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
     <div class="heart-bg" id="floating-hearts"></div>
 
     <a href="{% url 'home' %}" class="btn-romantic back-home">← Back to Love</a>

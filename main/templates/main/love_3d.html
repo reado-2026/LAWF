@@ -13,15 +13,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Styling -->
+    <!-- Link to main style.css for unified variables -->
+    <link rel="stylesheet" href="{% static 'main/style.css' %}" />
     <style>
         :root {
-            --primary: #ff007f;
-            --primary-glow: rgba(255, 0, 127, 0.4);
-            --bg-color: #050505;
-            --glass-bg: rgba(10, 10, 10, 0.75);
-            --glass-border: rgba(255, 0, 127, 0.25);
-            --text-main: #ffffff;
-            --text-muted: #b0b0b0;
+            --primary: #ff2a85;
+            --primary-glow: rgba(255, 42, 133, 0.45);
+            --bg-color: #06020c;
+            --glass-bg: rgba(12, 6, 20, 0.82);
+            --glass-border: rgba(255, 42, 133, 0.28);
+            --text-main: #f5f2f7;
+            --text-muted: #a39bb0;
+            --secondary: #8a2be2;
         }
 
         * {
@@ -655,8 +658,8 @@
             
             // Scene
             scene = new THREE.Scene();
-            scene.fog = new THREE.FogExp2(0x0c0006, 0.015);
-            scene.background = new THREE.Color(0x0c0006);
+            scene.fog = new THREE.FogExp2(0x06020c, 0.015);
+            scene.background = new THREE.Color(0x06020c);
 
             // Camera
             camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -727,17 +730,17 @@
             let themeColor, secondaryColor, fogColor;
             
             if (theme === 'pink') {
-                themeColor = 0xff007f;
-                secondaryColor = 0xffe6f2;
-                fogColor = 0x0c0006;
+                themeColor = 0xff2a85; // Vibrant Pink
+                secondaryColor = 0xffd700; // Romantic Candlelight Gold
+                fogColor = 0x06020c; // Deep Indigo-Violet
             } else if (theme === 'blue') {
-                themeColor = 0x0077ff;
-                secondaryColor = 0xe6f0ff;
-                fogColor = 0x00061a;
+                themeColor = 0x00d2ff; // Moonlight Cyan
+                secondaryColor = 0x8a2be2; // Cosmic Violet
+                fogColor = 0x010014; // Midnight Deep Blue
             } else if (theme === 'violet') {
-                themeColor = 0x8a2be2;
-                secondaryColor = 0xf5f0fa;
-                fogColor = 0x0b0014;
+                themeColor = 0x9b51e0; // Sunset Amethyst
+                secondaryColor = 0xff8a80; // Sunset Orange-Pink
+                fogColor = 0x0b001a; // Sunset Purple-Black
             }
             
             gsap.to(scene.background, {
@@ -788,11 +791,11 @@
             geo.center();
             
             const mat = new THREE.MeshStandardMaterial({
-                color: 0x1a1a1a,
-                roughness: 0.15,
-                metalness: 0.85,
-                emissive: 0xff0055,
-                emissiveIntensity: 0.2
+                color: 0x120520,
+                roughness: 0.1,
+                metalness: 0.9,
+                emissive: 0xff2a85,
+                emissiveIntensity: 0.35
             });
             
             pedestalMesh = new THREE.Mesh(geo, mat);
