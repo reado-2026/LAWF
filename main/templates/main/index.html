@@ -243,6 +243,7 @@
 
   <!-- React Application Core -->
   <script type="text/babel">
+    {% verbatim %}
     const { useState, useEffect, useRef } = React;
 
     const userDataEl = document.getElementById('user-data');
@@ -302,6 +303,23 @@
       "Every love story is beautiful, but ours is my favorite. 💖",
       "Your smile is my favorite view, and your voice is my favorite sound.",
       "Holding your hand is like holding a dream. Never let go."
+    ];
+
+    const GALLERY_IMAGES = [
+      "{% endverbatim %}{% static 'main/gallery/gallery1.png' %}{% verbatim %}",
+      "{% endverbatim %}{% static 'main/gallery/gallery2.png' %}{% verbatim %}",
+      "{% endverbatim %}{% static 'main/gallery/gallery3.jpg' %}{% verbatim %}",
+      "{% endverbatim %}{% static 'main/gallery/gallery4.jpg' %}{% verbatim %}",
+      "{% endverbatim %}{% static 'main/gallery/gallery5.jpg' %}{% verbatim %}",
+      "{% endverbatim %}{% static 'main/gallery/gallery6.jpg' %}{% verbatim %}",
+      "{% endverbatim %}{% static 'main/gallery/gallery7.jpg' %}{% verbatim %}",
+      "{% endverbatim %}{% static 'main/gallery/gallery8.jpg' %}{% verbatim %}",
+      "{% endverbatim %}{% static 'main/gallery/gallery9.png' %}{% verbatim %}",
+      "{% endverbatim %}{% static 'main/gallery/gallery10.jpg' %}{% verbatim %}",
+      "{% endverbatim %}{% static 'main/gallery/gallery11.png' %}{% verbatim %}",
+      "{% endverbatim %}{% static 'main/gallery/gallery12.jpg' %}{% verbatim %}",
+      "{% endverbatim %}{% static 'main/gallery/gallery13.jpg' %}{% verbatim %}",
+      "{% endverbatim %}{% static 'main/gallery/gallery14.jpg' %}{% verbatim %}"
     ];
 
     function App() {
@@ -719,48 +737,11 @@
 
               <div className="swiper moments-swiper">
                 <div className="swiper-wrapper">
-                  <div className="swiper-slide moment-slide">
-                    <img src="{% static 'main/gallery/gallery1.png' %}" className="slideshow-img" />
-                  </div>
-                  <div className="swiper-slide moment-slide">
-                    <img src="{% static 'main/gallery/gallery2.png' %}" className="slideshow-img" />
-                  </div>
-                  <div className="swiper-slide moment-slide">
-                    <img src="{% static 'main/gallery/gallery3.jpg' %}" className="slideshow-img" />
-                  </div>
-                  <div className="swiper-slide moment-slide">
-                    <img src="{% static 'main/gallery/gallery4.jpg' %}" className="slideshow-img" />
-                  </div>
-                  <div className="swiper-slide moment-slide">
-                    <img src="{% static 'main/gallery/gallery5.jpg' %}" className="slideshow-img" />
-                  </div>
-                  <div className="swiper-slide moment-slide">
-                    <img src="{% static 'main/gallery/gallery6.jpg' %}" className="slideshow-img" />
-                  </div>
-                  <div className="swiper-slide moment-slide">
-                    <img src="{% static 'main/gallery/gallery7.jpg' %}" className="slideshow-img" />
-                  </div>
-                  <div className="swiper-slide moment-slide">
-                    <img src="{% static 'main/gallery/gallery8.jpg' %}" className="slideshow-img" />
-                  </div>
-                  <div className="swiper-slide moment-slide">
-                    <img src="{% static 'main/gallery/gallery9.png' %}" className="slideshow-img" />
-                  </div>
-                  <div className="swiper-slide moment-slide">
-                    <img src="{% static 'main/gallery/gallery10.jpg' %}" className="slideshow-img" />
-                  </div>
-                  <div className="swiper-slide moment-slide">
-                    <img src="{% static 'main/gallery/gallery11.png' %}" className="slideshow-img" />
-                  </div>
-                  <div className="swiper-slide moment-slide">
-                    <img src="{% static 'main/gallery/gallery12.jpg' %}" className="slideshow-img" />
-                  </div>
-                  <div className="swiper-slide moment-slide">
-                    <img src="{% static 'main/gallery/gallery13.jpg' %}" className="slideshow-img" />
-                  </div>
-                  <div className="swiper-slide moment-slide">
-                    <img src="{% static 'main/gallery/gallery14.jpg' %}" className="slideshow-img" />
-                  </div>
+                  {GALLERY_IMAGES.map((imgUrl, idx) => (
+                    <div key={idx} className="swiper-slide moment-slide">
+                      <img src={imgUrl} className="slideshow-img" />
+                    </div>
+                  ))}
                 </div>
                 
                 <div className="swiper-pagination"></div>
@@ -873,6 +854,7 @@
     const container = document.getElementById('app-root');
     const root = ReactDOM.createRoot(container);
     root.render(<App />);
+    {% endverbatim %}
   </script>
 </body>
 
