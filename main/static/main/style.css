@@ -1,23 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Outfit:wght@300;400;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --primary: #ff2a85; /* Glowing Neon Rose */
-  --primary-light: #ff6ea7; /* Delicate Pink Rose */
-  --primary-dark: #d60062; /* Raspberry Magenta */
-  --secondary: #8a2be2; /* Amethyst Violet */
-  --secondary-light: #b066ff; /* Lavender Dream */
-  --secondary-dark: #4d0099;
-  --bg-color: #06020c; /* Deep Galactic Indigo */
-  --text-main: #f5f2f7;
-  --text-muted: #a39bb0;
+  --primary: #ff4e79; /* Glowing Coral-Rose */
+  --primary-light: #ff7f9d; /* Soft Rose Bloom */
+  --primary-dark: #d42650; /* Velvet Rose Red */
+  --secondary: #ffd393; /* Dreamy Rose-Gold */
+  --secondary-light: #ffe3b8; /* Creamy Gold */
+  --secondary-dark: #b8860b; /* Dark Goldenrod */
+  --accent: #ff9eb5; /* Ethereal Lavender-Pink */
+  --bg-color: #080314; /* Deep Twilight Navy */
+  --text-main: #faf6fe; /* Pure Cream White */
+  --text-muted: #b4abbd; /* Muted Star-Dust Grey */
   --white: #ffffff;
-  --glass: rgba(12, 6, 20, 0.82); /* Deep Amethyst Glass */
-  --glass-border: rgba(255, 42, 133, 0.28); /* Glowing Border */
-  --shadow-soft: 0 8px 32px 0 rgba(255, 42, 133, 0.18);
-  --shadow-strong: 0 0 30px rgba(255, 42, 133, 0.45), 0 0 50px rgba(138, 43, 226, 0.3);
-  --neon-glow: 0 0 10px rgba(255, 42, 133, 0.6), 0 0 25px rgba(138, 43, 226, 0.4);
-  --accent: #ffd700; /* Warm Candlelight Gold */
-  --gold-glow: 0 0 15px rgba(255, 215, 0, 0.4);
+  --glass: rgba(14, 8, 22, 0.82); /* Deep Twilight Glass */
+  --glass-border: rgba(255, 211, 147, 0.25); /* Translucent Rose-Gold Border */
+  --shadow-soft: 0 8px 32px 0 rgba(255, 78, 121, 0.15);
+  --shadow-strong: 0 0 30px rgba(255, 78, 121, 0.4), 0 0 50px rgba(255, 211, 147, 0.2);
+  --neon-glow: 0 0 10px rgba(255, 78, 121, 0.55), 0 0 25px rgba(255, 211, 147, 0.3);
+  --gold-glow: 0 0 15px rgba(255, 211, 147, 0.45);
 }
 
 * {
@@ -28,7 +28,7 @@
 
 html {
   scroll-behavior: smooth;
-  background-color: #030107;
+  background-color: #04010b;
 }
 
 ::selection {
@@ -40,8 +40,8 @@ body {
   font-family: 'Outfit', sans-serif;
   background-color: var(--bg-color);
   background-image: 
-    linear-gradient(rgba(255, 42, 133, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 42, 133, 0.03) 1px, transparent 1px);
+    linear-gradient(rgba(255, 211, 147, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 211, 147, 0.02) 1px, transparent 1px);
   background-size: 60px 60px;
   color: var(--text-main);
   line-height: 1.6;
@@ -70,7 +70,7 @@ body {
 .blob-1 {
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, rgba(255, 42, 133, 0.18) 0%, rgba(255, 42, 133, 0) 70%);
+  background: radial-gradient(circle, rgba(255, 78, 121, 0.16) 0%, rgba(255, 78, 121, 0) 70%);
   top: -10%;
   left: -10%;
 }
@@ -78,7 +78,7 @@ body {
 .blob-2 {
   width: 700px;
   height: 700px;
-  background: radial-gradient(circle, rgba(138, 43, 226, 0.18) 0%, rgba(138, 43, 226, 0) 70%);
+  background: radial-gradient(circle, rgba(255, 211, 147, 0.14) 0%, rgba(255, 211, 147, 0) 70%);
   bottom: -10%;
   right: -10%;
 }
@@ -86,7 +86,7 @@ body {
 .blob-3 {
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(255, 215, 0, 0.08) 0%, rgba(255, 215, 0, 0) 70%);
+  background: radial-gradient(circle, rgba(255, 158, 181, 0.08) 0%, rgba(255, 158, 181, 0) 70%);
   top: 35%;
   right: 15%;
 }

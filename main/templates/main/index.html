@@ -22,27 +22,27 @@
   <!-- Custom React & Interactive Styling -->
   <style>
     :root {
-      --primary: #ff2a85;
-      --primary-light: #ff6ea7;
-      --primary-dark: #d60062;
-      --secondary: #8a2be2;
-      --secondary-light: #b066ff;
-      --bg-color: #06020c;
-      --text-main: #f5f2f7;
-      --glass: rgba(12, 6, 20, 0.82);
-      --glass-border: rgba(255, 42, 133, 0.28);
-      --shadow-soft: 0 8px 32px 0 rgba(255, 42, 133, 0.18);
-      --shadow-strong: 0 0 30px rgba(255, 42, 133, 0.45), 0 0 50px rgba(138, 43, 226, 0.3);
-      --neon-glow: 0 0 10px rgba(255, 42, 133, 0.6), 0 0 25px rgba(138, 43, 226, 0.4);
-      --accent: #ffd700;
+      --primary: #ff4e79;
+      --primary-light: #ff7f9d;
+      --primary-dark: #d42650;
+      --secondary: #ffd393;
+      --secondary-light: #ffe3b8;
+      --accent: #ff9eb5;
+      --bg-color: #080314;
+      --text-main: #faf6fe;
+      --glass: rgba(14, 8, 22, 0.82);
+      --glass-border: rgba(255, 211, 147, 0.25);
+      --shadow-soft: 0 8px 32px 0 rgba(255, 78, 121, 0.15);
+      --shadow-strong: 0 0 30px rgba(255, 78, 121, 0.4), 0 0 50px rgba(255, 211, 147, 0.2);
+      --neon-glow: 0 0 10px rgba(255, 78, 121, 0.55), 0 0 25px rgba(255, 211, 147, 0.3);
     }
 
     body {
       background-color: var(--bg-color) !important;
       color: var(--text-main) !important;
       background-image: 
-        linear-gradient(rgba(255, 42, 133, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 42, 133, 0.03) 1px, transparent 1px) !important;
+        linear-gradient(rgba(255, 211, 147, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 211, 147, 0.02) 1px, transparent 1px) !important;
       background-size: 60px 60px !important;
       overflow-x: hidden;
     }
@@ -499,32 +499,41 @@
         }, 300);
       };
 
-      // Mouse cursor heart trail effect
+      // Mouse cursor heart & star trail effect
       useEffect(() => {
         const handleMouseMove = (e) => {
           if (Math.random() > 0.15) return; // limit spawn rate
           
-          const heart = document.createElement('div');
-          heart.innerHTML = Math.random() > 0.5 ? '❤️' : '💖';
-          heart.style.position = 'fixed';
-          heart.style.left = e.clientX + 'px';
-          heart.style.top = e.clientY + 'px';
-          heart.style.fontSize = (Math.random() * 12 + 6) + 'px';
-          heart.style.pointerEvents = 'none';
-          heart.style.zIndex = '9999';
-          heart.style.color = '#ff007f';
-          heart.style.textShadow = '0 0 5px #ff007f';
-          heart.style.opacity = '0.8';
-          document.body.appendChild(heart);
+          const isStar = Math.random() > 0.5;
+          const element = document.createElement('div');
+          
+          if (isStar) {
+            element.innerHTML = Math.random() > 0.5 ? '✨' : '⭐';
+            element.style.color = 'var(--secondary)';
+            element.style.textShadow = '0 0 5px var(--secondary)';
+          } else {
+            element.innerHTML = Math.random() > 0.5 ? '❤️' : '💖';
+            element.style.color = 'var(--primary)';
+            element.style.textShadow = '0 0 5px var(--primary)';
+          }
+          
+          element.style.position = 'fixed';
+          element.style.left = e.clientX + 'px';
+          element.style.top = e.clientY + 'px';
+          element.style.fontSize = (Math.random() * 12 + 6) + 'px';
+          element.style.pointerEvents = 'none';
+          element.style.zIndex = '9999';
+          element.style.opacity = '0.85';
+          document.body.appendChild(element);
 
-          gsap.to(heart, {
+          gsap.to(element, {
             y: e.clientY + (Math.random() - 0.5) * 60 - 60,
             x: e.clientX + (Math.random() - 0.5) * 60,
             scale: 0.1,
             opacity: 0,
             duration: 1.0,
             ease: "power1.out",
-            onComplete: () => heart.remove()
+            onComplete: () => element.remove()
           });
         };
 
@@ -623,67 +632,97 @@
           </nav>
 
           {/* Hero Section */}
-          <header id="home" className="hero">
-            <div className="hero-content">
-              <h1 className="hero-title">
-                Every Love Story is Beautiful, but ours is my <span className="highlight">favorite</span>.
+          <header id="home" className="hero" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', minHeight: '80vh', paddingTop: '140px', paddingBottom: '40px' }}>
+            <div className="hero-content" style={{ maxWidth: '800px', margin: '0 auto' }}>
+              <h1 className="hero-title" style={{ fontSize: '3.6rem', marginBottom: '1.5rem', lineHeight: '1.2' }}>
+                Every Love Story is Beautiful, but ours is my <span className="highlight" style={{ fontSize: '4.2rem' }}>favorite</span>.
               </h1>
-              <p className="hero-subtitle">Dedicated to the one who makes my heart skip a beat.</p>
+              <p className="hero-subtitle" style={{ fontSize: '1.25rem', color: 'var(--text-muted)', marginBottom: '2.5rem' }}>Dedicated to the one who makes my heart skip a beat.</p>
               
-              <div style={{ display: 'flex', gap: '15px', marginTop: '25px', flexWrap: 'wrap' }}>
-                <a href={userState.love3dUrl} className="cta-button" style={{ background: 'linear-gradient(45deg, #ff007f, #ff5e62)', boxShadow: '0 0 25px rgba(255, 0, 127, 0.5)', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ display: 'flex', gap: '15px', marginTop: '25px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                <a href={userState.love3dUrl} className="cta-button" style={{ background: 'linear-gradient(45deg, var(--primary), var(--primary-light))', boxShadow: '0 0 25px rgba(255, 78, 121, 0.45)', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
                   <i className="fa-solid fa-cube"></i> Explore 3D World ✨
                 </a>
                 <a href={userState.galleryUrl} className="cta-button">Browse Photos</a>
-                <a href={userState.sheUrl} className="cta-button" style={{ background: 'transparent', color: 'var(--primary)', border: '2px solid var(--primary)', boxShadow: '0 0 15px rgba(255, 0, 127, 0.15)' }}>
+                <a href={userState.sheUrl} className="cta-button" style={{ background: 'transparent', color: 'var(--primary)', border: '2px solid var(--primary)', boxShadow: '0 0 15px rgba(255, 78, 121, 0.15)' }}>
                   ANU ❤️
                 </a>
               </div>
             </div>
+          </header>
 
-            {/* Right Side: Interactive 3D Parallax Tilt Love Counter */}
-            <div className="tilt-card-container">
-              <div 
-                className="counter-card glass-panel" 
-                style={tiltStyle}
-                onMouseMove={handleMouseMove}
-                onMouseLeave={handleMouseLeave}
-              >
-                <div className="tilt-card-inner">
-                  <div style={{ fontFamily: 'Dancing Script, cursive', fontSize: '2.4rem', color: 'var(--primary)', marginBottom: '5px' }}>
-                    Our Journey Started
-                  </div>
-                  <div style={{ fontSize: '1.1rem', color: '#fff', opacity: '0.7', marginBottom: '25px', letterSpacing: '1px' }}>
-                    August 24, 2025
-                  </div>
-                  
-                  {/* Live Counter Grid */}
-                  <div className="counter-grid">
-                    <div className="counter-item">
-                      <div className="counter-number">{daysLeft.days}</div>
-                      <div className="counter-unit">Days</div>
-                    </div>
-                    <div className="counter-item">
-                      <div className="counter-number">{String(daysLeft.hours).padStart(2, '0')}</div>
-                      <div className="counter-unit">Hours</div>
-                    </div>
-                    <div className="counter-item">
-                      <div className="counter-number">{String(daysLeft.minutes).padStart(2, '0')}</div>
-                      <div className="counter-unit">Mins</div>
-                    </div>
-                    <div className="counter-item">
-                      <div className="counter-number" style={{ color: 'var(--primary-light)' }}>{String(daysLeft.seconds).padStart(2, '0')}</div>
-                      <div className="counter-unit">Secs</div>
-                    </div>
-                  </div>
+          {/* Live Stats & Wishes Grid */}
+          <section id="stats-wishes" className="section" style={{ background: 'transparent', paddingTop: '40px', paddingBottom: '60px' }}>
+            <div className="section-container">
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '40px', alignItems: 'stretch' }}>
+                
+                {/* Column 1: Live Counter */}
+                <div className="tilt-card-container">
+                  <div 
+                    className="counter-card glass-panel" 
+                    style={{ ...tiltStyle, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '2.5rem', border: '1px solid var(--glass-border)', boxShadow: 'var(--shadow-soft)' }}
+                    onMouseMove={handleMouseMove}
+                    onMouseLeave={handleMouseLeave}
+                  >
+                    <div className="tilt-card-inner">
+                      <div style={{ fontFamily: 'Dancing Script, cursive', fontSize: '2.4rem', color: 'var(--primary)', marginBottom: '5px' }}>
+                        Our Journey Started
+                      </div>
+                      <div style={{ fontSize: '1.1rem', color: '#fff', opacity: '0.7', marginBottom: '25px', letterSpacing: '1px' }}>
+                        August 24, 2025
+                      </div>
+                      
+                      {/* Live Counter Grid */}
+                      <div className="counter-grid">
+                        <div className="counter-item">
+                          <div className="counter-number">{daysLeft.days}</div>
+                          <div className="counter-unit">Days</div>
+                        </div>
+                        <div className="counter-item">
+                          <div className="counter-number">{String(daysLeft.hours).padStart(2, '0')}</div>
+                          <div className="counter-unit">Hours</div>
+                        </div>
+                        <div className="counter-item">
+                          <div className="counter-number">{String(daysLeft.minutes).padStart(2, '0')}</div>
+                          <div className="counter-unit">Mins</div>
+                        </div>
+                        <div className="counter-item">
+                          <div className="counter-number" style={{ color: 'var(--primary-light)' }}>{String(daysLeft.seconds).padStart(2, '0')}</div>
+                          <div className="counter-unit">Secs</div>
+                        </div>
+                      </div>
 
-                  <div style={{ fontSize: '1rem', color: '#fff', background: 'rgba(255, 0, 127, 0.15)', padding: '8px 20px', borderRadius: '50px', border: '1.5px solid var(--primary)', display: 'inline-block', boxShadow: '0 0 10px rgba(255,0,127,0.2)' }}>
-                    Today: {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                      <div style={{ fontSize: '0.95rem', color: '#fff', background: 'rgba(255, 78, 121, 0.12)', padding: '8px 20px', borderRadius: '50px', border: '1.5px solid var(--primary)', display: 'inline-block', boxShadow: '0 0 10px rgba(255,78,121,0.15)' }}>
+                        Today: {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                      </div>
+                    </div>
                   </div>
                 </div>
+
+                {/* Column 2: Love Notes */}
+                <div className="glass-panel" style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', border: '1px solid var(--glass-border)', boxShadow: 'var(--shadow-soft)' }}>
+                  <div style={{ fontFamily: 'Dancing Script, cursive', fontSize: '2.4rem', color: 'var(--primary)', marginBottom: '10px' }}>
+                    Love Notes
+                  </div>
+                  <div className="wish-box" style={{ width: '100%', border: 'none', background: 'transparent', minHeight: 'auto', padding: '10px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                    <div className="quote-icon" style={{ fontSize: '3rem', marginBottom: '5px', color: 'var(--primary)', opacity: '0.2' }}>"</div>
+                    <div className={`wish-text ${wishFade ? 'fade' : ''}`} style={{ transition: 'opacity 0.3s', opacity: wishFade ? 0 : 1, fontSize: '1.8rem', minHeight: '110px', display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: '1.4' }}>
+                      {currentWish}
+                    </div>
+                    <button 
+                      id="wish-btn"
+                      className="cta-button" 
+                      onClick={handleNextWish} 
+                      style={{ padding: '0.7rem 1.8rem', fontSize: '0.85rem', background: 'linear-gradient(45deg, var(--primary), var(--primary-light))', border: 'none', borderRadius: '50px', boxShadow: '0 5px 15px rgba(255, 78, 121, 0.25)' }}
+                    >
+                      Draw Another Note 💖
+                    </button>
+                  </div>
+                </div>
+
               </div>
             </div>
-          </header>
+          </section>
 
           {/* Floating BGM visualizer controller */}
           <div className="music-widget-floating glass-panel" onClick={handleToggleMusic}>
@@ -768,89 +807,63 @@
             </div>
           </section>
 
-          {/* Wishes & Love Calculator Sections */}
-          <section id="wishes" className="section" style={{ background: '#070707' }}>
-            <div className="section-container">
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '40px', alignItems: 'start' }}>
-                
-                {/* Column 1: Love Notes */}
-                <div>
-                  <h2 className="section-title" style={{ fontSize: '3rem', marginBottom: '30px', textAlign: 'left' }}>Love Notes</h2>
-                  <div className="wish-box glass-panel" style={{ minHeight: '260px' }}>
-                    <div className="quote-icon" style={{ fontSize: '3.5rem', marginBottom: '10px' }}>"</div>
-                    <div className={`wish-text ${wishFade ? 'fade' : ''}`} style={{ transition: 'opacity 0.3s', opacity: wishFade ? 0 : 1 }}>
-                      {currentWish}
+          {/* Love Calculator Section */}
+          <section id="calculator" className="section" style={{ background: '#05020a', padding: '80px 10%' }}>
+            <div className="section-container" style={{ maxWidth: '600px', margin: '0 auto' }}>
+              <h2 className="section-title" style={{ fontSize: '3rem', marginBottom: '30px', textAlign: 'center' }}>Spark Calculator</h2>
+              <div className="glass-panel" style={{ padding: '35px', minHeight: '280px', borderRadius: '24px', border: '1px solid var(--glass-border)', boxShadow: 'var(--shadow-soft)' }}>
+                {!calcResult && !calcLoading && (
+                  <form onSubmit={handleCalculateLove} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                    <div style={{ display: 'flex', gap: '15px', flexDirection: 'row' }}>
+                      <div style={{ flex: 1 }}>
+                        <label style={{ fontSize: '0.85rem', color: 'var(--primary)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', display: 'block', marginBottom: '8px' }}>Your Name</label>
+                        <input 
+                          type="text" 
+                          value={calcNames.name1} 
+                          onChange={(e) => setCalcNames({ ...calcNames, name1: e.target.value })}
+                          style={{ width: '100%', padding: '12px 16px', background: 'rgba(255, 255, 255, 0.04)', border: '1px solid var(--glass-border)', borderRadius: '12px', color: 'white', fontSize: '1rem', outline: 'none', transition: 'border-color 0.3s' }} 
+                        />
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <label style={{ fontSize: '0.85rem', color: 'var(--primary)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', display: 'block', marginBottom: '8px' }}>Her Name</label>
+                        <input 
+                          type="text" 
+                          value={calcNames.name2} 
+                          onChange={(e) => setCalcNames({ ...calcNames, name2: e.target.value })}
+                          style={{ width: '100%', padding: '12px 16px', background: 'rgba(255, 255, 255, 0.04)', border: '1px solid var(--glass-border)', borderRadius: '12px', color: 'white', fontSize: '1rem', outline: 'none', transition: 'border-color 0.3s' }} 
+                        />
+                      </div>
                     </div>
+                    <button type="submit" className="cta-button" style={{ width: '100%', padding: '14px', marginTop: '10px', background: 'linear-gradient(45deg, var(--primary), var(--primary-light))', border: 'none', fontWeight: '700', borderRadius: '50px', boxShadow: '0 5px 15px rgba(255, 78, 121, 0.3)' }}>
+                      Calculate Compatibility ❤️
+                    </button>
+                  </form>
+                )}
+
+                {calcLoading && (
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '200px', gap: '15px' }}>
+                    <div style={{ fontSize: '3.5rem', color: 'var(--primary)', animation: 'heartbeat 1s infinite' }}>❤️</div>
+                    <div style={{ fontSize: '1.2rem', fontWeight: '600', color: 'var(--secondary-light)' }}>Connecting Souls... {calcProgress}%</div>
+                    <div style={{ width: '100%', height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '10px', overflow: 'hidden' }}>
+                      <div style={{ width: `${calcProgress}%`, height: '100%', background: 'linear-gradient(90deg, var(--primary), var(--primary-light))', transition: 'width 0.1s' }}></div>
+                    </div>
+                  </div>
+                )}
+
+                {calcResult && (
+                  <div style={{ textAlign: 'center', padding: '10px 0' }}>
+                    <div style={{ fontSize: '1.1rem', textTransform: 'uppercase', color: 'var(--primary-light)', fontWeight: '700', letterSpacing: '2px' }}>Compatibility Score</div>
+                    <div style={{ fontSize: '4.5rem', fontWeight: '800', margin: '5px 0 15px 0', textShadow: '0 0 25px var(--primary)', color: 'white', fontFamily: 'Outfit, sans-serif' }}>{calcResult.score}%</div>
+                    <p style={{ fontSize: '1.15rem', color: '#eee', fontStyle: 'italic', marginBottom: '25px', lineHeight: '1.6' }}>"{calcResult.message}"</p>
                     <button 
-                      id="wish-btn"
-                      className="cta-button" 
-                      onClick={handleNextWish} 
-                      style={{ padding: '0.8rem 2rem', fontSize: '0.9rem', background: 'linear-gradient(45deg, #ff007f, #ff758f)' }}
+                      className="btn-outline" 
+                      onClick={() => setCalcResult(null)} 
+                      style={{ padding: '10px 25px', fontSize: '0.9rem', borderRadius: '50px' }}
                     >
-                      Draw Another Note 💖
+                      Try Again 💫
                     </button>
                   </div>
-                </div>
-
-                {/* Column 2: Love Spark Calculator */}
-                <div>
-                  <h2 className="section-title" style={{ fontSize: '3rem', marginBottom: '30px', textAlign: 'left' }}>Spark Calculator</h2>
-                  <div className="glass-panel" style={{ padding: '30px', minHeight: '260px' }}>
-                    {!calcResult && !calcLoading && (
-                      <form onSubmit={handleCalculateLove} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                        <div style={{ display: 'flex', gap: '10px' }}>
-                          <div style={{ flex: 1 }}>
-                            <label style={{ fontSize: '0.85rem', color: 'var(--primary)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', display: 'block', marginBottom: '5px' }}>Your Name</label>
-                            <input 
-                              type="text" 
-                              value={calcNames.name1} 
-                              onChange={(e) => setCalcNames({ ...calcNames, name1: e.target.value })}
-                              style={{ width: '100%', padding: '12px', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid var(--glass-border)', borderRadius: '10px', color: 'white', fontSize: '1rem' }} 
-                            />
-                          </div>
-                          <div style={{ flex: 1 }}>
-                            <label style={{ fontSize: '0.85rem', color: 'var(--primary)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', display: 'block', marginBottom: '5px' }}>Her Name</label>
-                            <input 
-                              type="text" 
-                              value={calcNames.name2} 
-                              onChange={(e) => setCalcNames({ ...calcNames, name2: e.target.value })}
-                              style={{ width: '100%', padding: '12px', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid var(--glass-border)', borderRadius: '10px', color: 'white', fontSize: '1rem' }} 
-                            />
-                          </div>
-                        </div>
-                        <button type="submit" className="cta-button" style={{ width: '100%', padding: '12px', marginTop: '10px', background: 'linear-gradient(45deg, #ff007f, #ff5e62)', border: 'none', fontWeight: '700' }}>
-                          Calculate Compatibility ❤️
-                        </button>
-                      </form>
-                    )}
-
-                    {calcLoading && (
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '200px', gap: '15px' }}>
-                        <div style={{ fontSize: '3rem', color: 'var(--primary)', animation: 'heartbeat 1s infinite' }}>❤️</div>
-                        <div style={{ fontSize: '1.2rem', fontWeight: '600' }}>Connecting Souls... {calcProgress}%</div>
-                        <div style={{ width: '100%', height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '10px', overflow: 'hidden' }}>
-                          <div style={{ width: `${calcProgress}%`, height: '100%', background: 'var(--primary)', transition: 'width 0.1s' }}></div>
-                        </div>
-                      </div>
-                    )}
-
-                    {calcResult && (
-                      <div style={{ textAlign: 'center' }}>
-                        <div style={{ fontSize: '1rem', textTransform: 'uppercase', color: 'var(--primary)', fontWeight: '700', letterSpacing: '2px' }}>Compatibility Score</div>
-                        <div style={{ fontSize: '4rem', fontWeight: '800', margin: '5px 0 15px 0', textShadow: '0 0 20px var(--primary)', color: 'white' }}>{calcResult.score}%</div>
-                        <p style={{ fontSize: '1.1rem', color: '#eee', fontStyle: 'italic', marginBottom: '20px', lineHeight: '1.6' }}>"{calcResult.message}"</p>
-                        <button 
-                          className="btn-outline" 
-                          onClick={() => setCalcResult(null)} 
-                          style={{ padding: '8px 20px', fontSize: '0.85rem' }}
-                        >
-                          Try Again 💫
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
+                )}
               </div>
             </div>
           </section>
