@@ -4,3 +4,5 @@ db.sqlite3
 .env
 staticfiles/
 media/
+node_modules/
+package-lock.json

@@ -1,0 +1,1401 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our 3D Love World | Interactive Romance</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Outfit:wght@300;400;600;700&family=Quicksand:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for romantic icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styling -->
+    <style>
+        :root {
+            --primary: #ff007f;
+            --primary-glow: rgba(255, 0, 127, 0.4);
+            --bg-color: #050505;
+            --glass-bg: rgba(10, 10, 10, 0.75);
+            --glass-border: rgba(255, 0, 127, 0.25);
+            --text-main: #ffffff;
+            --text-muted: #b0b0b0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--bg-color);
+            font-family: 'Outfit', sans-serif;
+            color: var(--text-main);
+        }
+
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        #react-root {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none;
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: auto 1fr;
+        }
+
+        .interactive {
+            pointer-events: auto;
+        }
+
+        /* Glassmorphism utility */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(255, 0, 127, 0.15);
+        }
+
+        /* Navbar */
+        .navbar {
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-shadow: 0 0 10px var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo::after {
+            content: '❤️';
+            font-size: 1rem;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.3); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.3); }
+            70% { transform: scale(1); }
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 50px;
+            border: 1px solid transparent;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+            border-color: var(--glass-border);
+            background: rgba(255, 0, 127, 0.05);
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.2);
+        }
+
+        /* Sidebar Control Center */
+        .controls-sidebar {
+            position: absolute;
+            left: 30px;
+            top: 100px;
+            width: 320px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-height: calc(100vh - 150px);
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        .controls-sidebar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .control-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .btn-theme {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .btn-theme:hover, .btn-theme.active {
+            background: rgba(255, 0, 127, 0.15);
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.3);
+            transform: translateX(5px);
+        }
+
+        .btn-theme i {
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+
+        /* Particle Button Row */
+        .particle-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .btn-particle {
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-particle:hover, .btn-particle.active {
+            background: rgba(255, 0, 127, 0.15);
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.2);
+        }
+
+        .btn-particle span {
+            font-size: 1.2rem;
+        }
+
+        /* Interactive Firework Button */
+        .btn-firework {
+            background: linear-gradient(45deg, #ff007f, #ff5e62);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 0, 127, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-firework:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 0, 127, 0.6);
+        }
+
+        .btn-firework:active {
+            transform: translateY(-1px);
+        }
+
+        /* Music Player Card */
+        .music-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .music-disc {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 15px var(--primary);
+            animation: spin 4s linear infinite;
+            animation-play-state: paused;
+        }
+
+        .music-disc.playing {
+            animation-play-state: running;
+        }
+
+        .music-disc i {
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .music-info {
+            flex: 1;
+        }
+
+        .music-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .music-artist {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .music-play-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .music-play-btn:hover {
+            transform: scale(1.1);
+            color: white;
+        }
+
+        /* Dialogue Box (Speech bubbles above characters) */
+        .dialogue-overlay {
+            position: absolute;
+            top: 25%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 200px;
+            pointer-events: none;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .dialogue-bubble {
+            background: rgba(10, 10, 10, 0.85);
+            border: 1.5px solid var(--primary);
+            border-radius: 15px;
+            padding: 12px 18px;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            max-width: 220px;
+            text-align: center;
+            box-shadow: 0 4px 15px var(--primary-glow);
+            opacity: 0;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            position: relative;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .dialogue-bubble.visible {
+            opacity: 1;
+            transform: translateY(-10px);
+        }
+
+        .dialogue-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 8px 8px 0;
+            border-style: solid;
+            border-color: rgba(10, 10, 10, 0.85) transparent;
+            display: block;
+            width: 0;
+        }
+
+        /* Love Letter Envelopes / Board */
+        .letters-board {
+            position: absolute;
+            right: 30px;
+            top: 100px;
+            width: 300px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .letter-envelope {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 0, 127, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .letter-envelope:hover {
+            border-color: var(--primary);
+            background: rgba(255, 0, 127, 0.08);
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .envelope-icon {
+            font-size: 1.6rem;
+            color: var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .letter-envelope:hover .envelope-icon {
+            transform: rotate(-10deg) scale(1.1);
+        }
+
+        .envelope-details {
+            flex: 1;
+            margin-left: 15px;
+        }
+
+        .envelope-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .envelope-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Overlay Love Letter View */
+        .letter-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 5, 5, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .letter-modal.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .letter-paper {
+            width: 90%;
+            max-width: 600px;
+            padding: 40px;
+            border-radius: 30px;
+            position: relative;
+            background: #fffdf7; /* Warm papyrus color */
+            color: #2b2b2b;
+            box-shadow: 0 10px 40px rgba(255, 0, 127, 0.3);
+            border: 8px double rgba(255, 0, 127, 0.2);
+            transform: scale(0.9);
+            transition: transform 0.5s ease;
+        }
+
+        .letter-modal.open .letter-paper {
+            transform: scale(1);
+        }
+
+        .letter-close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 1.8rem;
+            color: #888;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .letter-close:hover {
+            color: var(--primary);
+        }
+
+        .letter-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 1px dashed rgba(255, 0, 127, 0.2);
+            padding-bottom: 15px;
+        }
+
+        .letter-content {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            min-height: 200px;
+            white-space: pre-line;
+        }
+
+        .letter-signature {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            color: var(--primary);
+            text-align: right;
+            margin-top: 30px;
+        }
+
+        /* Tips / Bottom bar */
+        .bottom-bar {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px 25px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .bottom-bar i {
+            color: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            #react-root {
+                overflow-y: auto;
+                grid-template-rows: auto auto auto;
+                grid-template-columns: 1fr;
+                padding-bottom: 50px;
+            }
+            .controls-sidebar {
+                position: static;
+                width: 90%;
+                margin: 20px auto;
+                max-height: none;
+            }
+            .letters-board {
+                position: static;
+                width: 90%;
+                margin: 20px auto;
+            }
+            .dialogue-overlay {
+                gap: 80px;
+                top: 40%;
+            }
+            .dialogue-bubble {
+                font-size: 0.85rem;
+                padding: 8px 12px;
+                max-width: 140px;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- 3D Canvas Container -->
+    <div id="canvas-container"></div>
+    
+    <!-- React Root -->
+    <div id="react-root"></div>
+    
+    <!-- Audio Element for Romantic Music -->
+    <audio id="romantic-bgm" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- React, ReactDOM, Babel, Three.js, OrbitControls, and GSAP libraries from CDN -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <!-- Three.js Setup & Logic (Global bindings for React communication) -->
+    <script>
+        let scene, camera, renderer, controls;
+        let particlesSystem;
+        let particlesType = 'hearts'; 
+        let currentTheme = 'pink'; 
+        let fireworks = [];
+        let boyCharacter, girlCharacter;
+        let pedestalMesh;
+
+        // Custom textures drawn programmatically on canvases
+        function createHeartTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 64;
+            canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#ff007f';
+            ctx.beginPath();
+            ctx.moveTo(32, 16);
+            ctx.bezierCurveTo(32, 16, 26, 4, 14, 4);
+            ctx.bezierCurveTo(2, 4, 2, 26, 2, 26);
+            ctx.bezierCurveTo(2, 38, 18, 52, 32, 62);
+            ctx.bezierCurveTo(46, 52, 62, 38, 62, 26);
+            ctx.bezierCurveTo(62, 26, 62, 4, 50, 4);
+            ctx.bezierCurveTo(38, 4, 32, 16, 32, 16);
+            ctx.closePath();
+            ctx.fill();
+            return new THREE.CanvasTexture(canvas);
+        }
+
+        function createSakuraTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 64;
+            canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+            
+            const grad = ctx.createRadialGradient(32, 32, 5, 32, 32, 30);
+            grad.addColorStop(0, '#fff3f5');
+            grad.addColorStop(0.5, '#ffb7c5');
+            grad.addColorStop(1, '#ff8da1');
+            
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.moveTo(32, 6);
+            ctx.quadraticCurveTo(55, 18, 38, 58);
+            ctx.lineTo(32, 52);
+            ctx.lineTo(26, 58);
+            ctx.quadraticCurveTo(9, 18, 32, 6);
+            ctx.closePath();
+            ctx.fill();
+            return new THREE.CanvasTexture(canvas);
+        }
+
+        function createStarTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 64;
+            canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+            
+            const grad = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+            grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
+            grad.addColorStop(0.2, 'rgba(255, 220, 240, 0.9)');
+            grad.addColorStop(0.6, 'rgba(255, 0, 127, 0.2)');
+            grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 64, 64);
+            return new THREE.CanvasTexture(canvas);
+        }
+
+        // Initialize WebGL Scene
+        function init3D() {
+            const container = document.getElementById('canvas-container');
+            
+            // Scene
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x0c0006, 0.015);
+            scene.background = new THREE.Color(0x0c0006);
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 4.5, 11);
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            container.appendChild(renderer.domElement);
+
+            // Controls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.maxPolarAngle = Math.PI / 2 - 0.05; 
+            controls.minDistance = 4;
+            controls.maxDistance = 20;
+            controls.target.set(0, 2, 0);
+
+            // Lights
+            setupLights();
+
+            // Background Stars
+            createBackgroundStars();
+
+            // Pedestal
+            createPedestal();
+
+            // Couple Characters
+            loadCharacters();
+
+            // Active Floating Particles
+            createFloatingParticles();
+
+            // Animation Loop
+            animate();
+
+            // Resize handler
+            window.addEventListener('resize', onWindowResize, false);
+        }
+
+        let ambientLight, dirLight, pointLight, spotLight;
+        function setupLights() {
+            ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+            scene.add(ambientLight);
+
+            dirLight = new THREE.DirectionalLight(0xff007f, 0.5);
+            dirLight.position.set(5, 10, 7);
+            dirLight.castShadow = true;
+            scene.add(dirLight);
+
+            pointLight = new THREE.PointLight(0xffb3d1, 1.8, 15);
+            pointLight.position.set(0, 3, 2);
+            scene.add(pointLight);
+
+            spotLight = new THREE.SpotLight(0xff007f, 4, 25, Math.PI / 4, 0.5, 1);
+            spotLight.position.set(0, 12, 0);
+            spotLight.target.position.set(0, 0, 0);
+            scene.add(spotLight);
+        }
+
+        // Update lighting colors when theme changes
+        function updateThemeLights(theme) {
+            currentTheme = theme;
+            let themeColor, secondaryColor, fogColor;
+            
+            if (theme === 'pink') {
+                themeColor = 0xff007f;
+                secondaryColor = 0xffe6f2;
+                fogColor = 0x0c0006;
+            } else if (theme === 'blue') {
+                themeColor = 0x0077ff;
+                secondaryColor = 0xe6f0ff;
+                fogColor = 0x00061a;
+            } else if (theme === 'violet') {
+                themeColor = 0x8a2be2;
+                secondaryColor = 0xf5f0fa;
+                fogColor = 0x0b0014;
+            }
+            
+            gsap.to(scene.background, {
+                r: ((fogColor >> 16) & 255) / 255,
+                g: ((fogColor >> 8) & 255) / 255,
+                b: (fogColor & 255) / 255,
+                duration: 1.5
+            });
+            
+            gsap.to(scene.fog.color, {
+                r: ((fogColor >> 16) & 255) / 255,
+                g: ((fogColor >> 8) & 255) / 255,
+                b: (fogColor & 255) / 255,
+                duration: 1.5
+            });
+            
+            gsap.to(dirLight.color, { r: ((themeColor >> 16) & 255) / 255, g: ((themeColor >> 8) & 255) / 255, b: (themeColor & 255) / 255, duration: 1.5 });
+            gsap.to(spotLight.color, { r: ((themeColor >> 16) & 255) / 255, g: ((themeColor >> 8) & 255) / 255, b: (themeColor & 255) / 255, duration: 1.5 });
+            gsap.to(pointLight.color, { r: ((secondaryColor >> 16) & 255) / 255, g: ((secondaryColor >> 8) & 255) / 255, b: (secondaryColor & 255) / 255, duration: 1.5 });
+            
+            // Re-create particles to match color palette
+            setTimeout(createFloatingParticles, 100);
+        }
+
+        // Extrude a beautiful 3D Heart Pedestal
+        function createPedestal() {
+            const heartShape = new THREE.Shape();
+            
+            // Draw heart shape path centered
+            heartShape.moveTo(0, 0);
+            heartShape.bezierCurveTo(0, 1.2, -1.5, 2.5, -3.5, 2.5);
+            heartShape.bezierCurveTo(-6, 2.5, -6.5, -0.5, -6.5, -1);
+            heartShape.bezierCurveTo(-6.5, -3, -4.5, -5.5, 0, -9.5);
+            heartShape.bezierCurveTo(4.5, -5.5, 6.5, -3, 6.5, -1);
+            heartShape.bezierCurveTo(6.5, -0.5, 6, 2.5, 3.5, 2.5);
+            heartShape.bezierCurveTo(1.5, 2.5, 0, 1.2, 0, 0);
+            
+            const extrudeSettings = {
+                depth: 0.8,
+                bevelEnabled: true,
+                bevelSegments: 8,
+                steps: 1,
+                bevelSize: 0.25,
+                bevelThickness: 0.25
+            };
+            
+            const geo = new THREE.ExtrudeGeometry(heartShape, extrudeSettings);
+            geo.center();
+            
+            const mat = new THREE.MeshStandardMaterial({
+                color: 0x1a1a1a,
+                roughness: 0.15,
+                metalness: 0.85,
+                emissive: 0xff0055,
+                emissiveIntensity: 0.2
+            });
+            
+            pedestalMesh = new THREE.Mesh(geo, mat);
+            pedestalMesh.rotation.x = Math.PI / 2;
+            pedestalMesh.position.set(0, 0.4, 0);
+            pedestalMesh.receiveShadow = true;
+            scene.add(pedestalMesh);
+
+            const ringGeo = new THREE.RingGeometry(4.2, 4.4, 32);
+            const ringMat = new THREE.MeshBasicMaterial({ color: 0xff007f, side: THREE.DoubleSide, transparent: true, opacity: 0.4 });
+            const neonRing = new THREE.Mesh(ringGeo, ringMat);
+            neonRing.rotation.x = Math.PI / 2;
+            neonRing.position.set(0, 0.05, 0);
+            scene.add(neonRing);
+        }
+
+        // Load transparent cutout images of the couple
+        function loadCharacters() {
+            const loader = new THREE.TextureLoader();
+            const girlImgUrl = "{% static 'main/anu/girl_character.png' %}";
+            const boyImgUrl = "{% static 'main/anu/boy_character.png' %}";
+            const fallbackUrl = "{% static 'main/anu/image.png' %}";
+
+            // Load Girl
+            loader.load(
+                girlImgUrl,
+                (texture) => {
+                    setupGirlMesh(texture);
+                },
+                undefined,
+                () => {
+                    console.log("Girl cutout missing, using fallback...");
+                    loader.load(fallbackUrl, (texture) => {
+                        texture.repeat.set(0.5, 0.5);
+                        texture.offset.set(0, 0);
+                        setupGirlMesh(texture);
+                    });
+                }
+            );
+
+            // Load Boy
+            loader.load(
+                boyImgUrl,
+                (texture) => {
+                    setupBoyMesh(texture);
+                },
+                undefined,
+                () => {
+                    console.log("Boy cutout missing, using fallback...");
+                    loader.load(fallbackUrl, (texture) => {
+                        texture.repeat.set(0.5, 0.5);
+                        texture.offset.set(0.5, 0);
+                        setupBoyMesh(texture);
+                    });
+                }
+            );
+        }
+
+        function setupGirlMesh(texture) {
+            texture.minFilter = THREE.LinearFilter;
+            const mat = new THREE.MeshStandardMaterial({
+                map: texture,
+                transparent: true,
+                side: THREE.DoubleSide,
+                roughness: 0.75,
+                metalness: 0.1,
+                alphaTest: 0.1
+            });
+            
+            const geo = new THREE.PlaneGeometry(2.8, 3.8);
+            girlCharacter = new THREE.Mesh(geo, mat);
+            girlCharacter.position.set(-1.1, 2.3, 0); 
+            girlCharacter.castShadow = true;
+            girlCharacter.receiveShadow = true;
+            girlCharacter.userData = { isCharacter: true, name: 'Girl' };
+            scene.add(girlCharacter);
+            
+            gsap.from(girlCharacter.position, { y: -1, duration: 1.5, ease: "back.out(1.2)" });
+        }
+
+        function setupBoyMesh(texture) {
+            texture.minFilter = THREE.LinearFilter;
+            const mat = new THREE.MeshStandardMaterial({
+                map: texture,
+                transparent: true,
+                side: THREE.DoubleSide,
+                roughness: 0.75,
+                metalness: 0.1,
+                alphaTest: 0.1
+            });
+            
+            const geo = new THREE.PlaneGeometry(2.8, 3.8);
+            boyCharacter = new THREE.Mesh(geo, mat);
+            boyCharacter.position.set(1.1, 2.3, 0); 
+            boyCharacter.castShadow = true;
+            boyCharacter.receiveShadow = true;
+            boyCharacter.userData = { isCharacter: true, name: 'Boy' };
+            scene.add(boyCharacter);
+            
+            gsap.from(boyCharacter.position, { y: -1, duration: 1.5, ease: "back.out(1.2)", delay: 0.25 });
+        }
+
+        // Static Background Stars
+        function createBackgroundStars() {
+            const count = 1000;
+            const geo = new THREE.BufferGeometry();
+            const pos = new Float32Array(count * 3);
+            
+            for (let i = 0; i < count; i++) {
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.acos((Math.random() * 2) - 1);
+                const distance = 70 + Math.random() * 80;
+                
+                pos[i * 3] = distance * Math.sin(phi) * Math.cos(theta);
+                pos[i * 3 + 1] = distance * Math.sin(phi) * Math.sin(theta);
+                pos[i * 3 + 2] = distance * Math.cos(phi);
+            }
+            
+            geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+            
+            const mat = new THREE.PointsMaterial({
+                size: 0.5,
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.7,
+                blending: THREE.AdditiveBlending
+            });
+            
+            const bgStars = new THREE.Points(geo, mat);
+            scene.add(bgStars);
+        }
+
+        // Active floating particles
+        let particlesGeo, particlesMat;
+        let particlesCount = 150;
+        let particleVelocities = [];
+
+        function createFloatingParticles() {
+            if (particlesSystem) scene.remove(particlesSystem);
+            
+            particlesGeo = new THREE.BufferGeometry();
+            const positions = new Float32Array(particlesCount * 3);
+            particleVelocities = [];
+            
+            let texture;
+            let size = 0.9;
+            let pColor = 0xff007f;
+            
+            if (particlesType === 'hearts') {
+                texture = createHeartTexture();
+                size = 1.1;
+                pColor = currentTheme === 'blue' ? 0x00ccff : (currentTheme === 'violet' ? 0xda70d6 : 0xff2a7a);
+            } else if (particlesType === 'sakura') {
+                texture = createSakuraTexture();
+                size = 1.0;
+                pColor = 0xffb7c5;
+            } else {
+                texture = createStarTexture();
+                size = 0.6;
+                pColor = 0xffffff;
+            }
+
+            for (let i = 0; i < particlesCount; i++) {
+                positions[i * 3] = (Math.random() - 0.5) * 12;
+                positions[i * 3 + 1] = Math.random() * 10;
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 12;
+                
+                particleVelocities.push({
+                    x: (Math.random() - 0.5) * 0.015,
+                    y: 0.015 + Math.random() * 0.02, 
+                    z: (Math.random() - 0.5) * 0.015
+                });
+            }
+
+            particlesGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            
+            particlesMat = new THREE.PointsMaterial({
+                size: size,
+                map: texture,
+                transparent: true,
+                opacity: 0.85,
+                color: pColor,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+            
+            particlesSystem = new THREE.Points(particlesGeo, particlesMat);
+            scene.add(particlesSystem);
+        }
+
+        function updateParticles() {
+            if (!particlesSystem) return;
+            
+            const positions = particlesGeo.attributes.position.array;
+            
+            for (let i = 0; i < particlesCount; i++) {
+                const vel = particleVelocities[i];
+                
+                positions[i * 3] += vel.x;
+                positions[i * 3 + 1] += vel.y;
+                positions[i * 3 + 2] += vel.z;
+                
+                if (positions[i * 3 + 1] > 10) {
+                    positions[i * 3] = (Math.random() - 0.5) * 12;
+                    positions[i * 3 + 1] = 0;
+                    positions[i * 3 + 2] = (Math.random() - 0.5) * 12;
+                }
+            }
+            
+            particlesGeo.attributes.position.needsUpdate = true;
+        }
+
+        function setParticleType(type) {
+            particlesType = type;
+            createFloatingParticles();
+        }
+
+        // Heart Fireworks
+        function launchFirework() {
+            const fireworkCount = 60;
+            const geo = new THREE.BufferGeometry();
+            const pos = new Float32Array(fireworkCount * 3);
+            const velocities = [];
+            
+            const cx = (Math.random() - 0.5) * 6;
+            const cy = 5 + Math.random() * 3;
+            const cz = (Math.random() - 0.5) * 6;
+            
+            const texture = createHeartTexture();
+            
+            for (let i = 0; i < fireworkCount; i++) {
+                const angle = (i / fireworkCount) * Math.PI * 2;
+                const x = 16 * Math.sin(angle) ** 3;
+                const y = 13 * Math.cos(angle) - 5 * Math.cos(2*angle) - 2 * Math.cos(3*angle) - Math.cos(4*angle);
+                const factor = 0.06 + Math.random() * 0.03;
+                
+                pos[i * 3] = cx;
+                pos[i * 3 + 1] = cy;
+                pos[i * 3 + 2] = cz;
+                
+                velocities.push({
+                    x: x * factor * 0.16,
+                    y: y * factor * 0.16,
+                    z: (Math.random() - 0.5) * 0.3
+                });
+            }
+            
+            geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+            
+            let colorHex = currentTheme === 'blue' ? 0x33d6ff : (currentTheme === 'violet' ? 0xee82ee : 0xff3b7e);
+            const mat = new THREE.PointsMaterial({
+                size: 0.7,
+                map: texture,
+                transparent: true,
+                opacity: 1.0,
+                color: colorHex,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+            
+            const fireworkParticles = new THREE.Points(geo, mat);
+            scene.add(fireworkParticles);
+            
+            fireworks.push({
+                system: fireworkParticles,
+                geo: geo,
+                velocities: velocities,
+                age: 0,
+                maxAge: 70
+            });
+        }
+
+        function updateFireworks() {
+            for (let f = fireworks.length - 1; f >= 0; f--) {
+                const fw = fireworks[f];
+                const positions = fw.geo.attributes.position.array;
+                
+                for (let i = 0; i < positions.length / 3; i++) {
+                    const vel = fw.velocities[i];
+                    positions[i * 3] += vel.x;
+                    positions[i * 3 + 1] += vel.y;
+                    positions[i * 3 + 2] += vel.z;
+                    vel.y -= 0.0015; // drift down
+                }
+                
+                fw.geo.attributes.position.needsUpdate = true;
+                fw.age++;
+                fw.system.material.opacity = 1.0 - (fw.age / fw.maxAge);
+                
+                if (fw.age >= fw.maxAge) {
+                    scene.remove(fw.system);
+                    fw.system.geometry.dispose();
+                    fw.system.material.dispose();
+                    fireworks.splice(f, 1);
+                }
+            }
+        }
+
+        let time = 0;
+        function animate() {
+            requestAnimationFrame(animate);
+            time += 0.01;
+
+            if (pedestalMesh) {
+                pedestalMesh.rotation.z = time * 0.05;
+            }
+
+            if (girlCharacter) {
+                girlCharacter.rotation.y = Math.sin(time * 1.2) * 0.02;
+                girlCharacter.position.y = 2.3 + Math.sin(time * 1.6) * 0.03;
+            }
+            if (boyCharacter) {
+                boyCharacter.rotation.y = Math.sin(time * 1.2 + Math.PI) * 0.02;
+                boyCharacter.position.y = 2.3 + Math.sin(time * 1.6 + Math.PI) * 0.03;
+            }
+
+            if (pointLight) {
+                pointLight.position.x = Math.sin(time) * 3;
+                pointLight.position.z = Math.cos(time) * 3;
+                pointLight.position.y = 2.8 + Math.sin(time * 1.5) * 0.7;
+            }
+
+            updateParticles();
+            updateFireworks();
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function setupInteraction(onCharacterClick) {
+            const raycaster = new THREE.Raycaster();
+            const mouse = new THREE.Vector2();
+
+            window.addEventListener('click', (e) => {
+                if (e.target.tagName !== 'CANVAS') return;
+
+                mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+                mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+                raycaster.setFromCamera(mouse, camera);
+                const intersects = raycaster.intersectObjects(scene.children);
+
+                for (let hit of intersects) {
+                    if (hit.object.userData && hit.object.userData.isCharacter) {
+                        onCharacterClick(hit.object.userData.name);
+                        
+                        gsap.to(hit.object.scale, { x: 1.12, y: 1.12, duration: 0.15, yoyo: true, repeat: 1 });
+                        
+                        const tx = hit.object.position.x;
+                        const ty = hit.object.position.y + 1.8;
+                        const tz = hit.object.position.z;
+                        
+                        for (let j = 0; j < 4; j++) {
+                            const miniHeart = new THREE.Mesh(
+                                new THREE.PlaneGeometry(0.4, 0.4),
+                                new THREE.MeshBasicMaterial({ map: createHeartTexture(), transparent: true, blending: THREE.AdditiveBlending })
+                            );
+                            miniHeart.position.set(tx + (Math.random() - 0.5) * 1.2, ty, tz);
+                            scene.add(miniHeart);
+                            
+                            gsap.to(miniHeart.position, {
+                                y: ty + 1.5 + Math.random() * 1.5,
+                                x: miniHeart.position.x + (Math.random() - 0.5) * 1.5,
+                                duration: 1.2,
+                                ease: "power2.out",
+                                onComplete: () => scene.remove(miniHeart)
+                            });
+                            gsap.to(miniHeart.material, { opacity: 0, duration: 1.2 });
+                        }
+                        break;
+                    }
+                }
+            });
+        }
+    </script>
+
+    <!-- React Code -->
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        const LOVE_LETTERS = [
+            {
+                id: 1,
+                title: "To My Dearest Anu",
+                desc: "Read first: How much you mean to me...",
+                content: "Anu,\n\nFrom the moment you accepted to walk this beautiful journey with me on August 24, 2025, my life found its true colors. Every message from you is a heartbeat, and every memory with you is a treasure.\n\nThis 3D scene is a small reflection of the universe of love you've created in my heart—limitless, bright, and centered entirely on you.\n\nForever & Always yours.",
+                signature: "With all my love, Ashik"
+            },
+            {
+                id: 2,
+                title: "Our Unspoken Connection",
+                desc: "A reflection on our friendship years...",
+                content: "Looking back at the years between 2023 and 2025, when we were growing closer as friends, I realize my heart had already chosen you. It was in the shared laughs, the silent comforts, and the endless support.\n\nThank you for being my best friend before becoming my forever. Our foundation is unbreakable because it was built on pure friendship.",
+                signature: "Yours eternally, Ashik"
+            },
+            {
+                id: 3,
+                title: "A Promise for the Future",
+                desc: "A vow to stand by you, always...",
+                content: "No matter where our path leads or what storms may cross our skies, I promise to hold your hand. I promise to support your dreams, celebrate your victories, and comfort your worries.\n\nEvery day of pure love we spend together is proof that dreams do come true. I love you, my Anu.",
+                signature: "Forever yours, Ashik"
+            }
+        ];
+
+        function App() {
+            const [activeTheme, setActiveTheme] = useState('pink');
+            const [activeParticles, setActiveParticles] = useState('hearts');
+            const [isPlayingMusic, setIsPlayingMusic] = useState(false);
+            const [speechGirl, setSpeechGirl] = useState(false);
+            const [speechBoy, setSpeechBoy] = useState(false);
+            const [openLetter, setOpenLetter] = useState(null);
+            const [typedText, setTypedText] = useState("");
+            
+            const typingIntervalRef = useRef(null);
+
+            useEffect(() => {
+                init3D();
+                
+                setupInteraction((characterName) => {
+                    if (characterName === 'Girl') {
+                        setSpeechGirl(true);
+                        setTimeout(() => setSpeechGirl(false), 4000);
+                    } else if (characterName === 'Boy') {
+                        setSpeechBoy(true);
+                        setTimeout(() => setSpeechBoy(false), 4000);
+                    }
+                });
+            }, []);
+
+            const toggleMusic = () => {
+                const audio = document.getElementById('romantic-bgm');
+                if (isPlayingMusic) {
+                    audio.pause();
+                } else {
+                    audio.play().catch(e => console.log("Audio block: " + e));
+                }
+                setIsPlayingMusic(!isPlayingMusic);
+            };
+
+            const handleLaunchFirework = () => {
+                launchFirework();
+            };
+
+            const changeTheme = (themeName) => {
+                setActiveTheme(themeName);
+                updateThemeLights(themeName);
+            };
+
+            const changeParticles = (particleType) => {
+                setActiveParticles(particleType);
+                setParticleType(particleType);
+            };
+
+            const handleOpenLetter = (letter) => {
+                setOpenLetter(letter);
+                setTypedText("");
+                
+                if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
+                
+                let index = 0;
+                typingIntervalRef.current = setInterval(() => {
+                    if (index < letter.content.length) {
+                        setTypedText((prev) => prev + letter.content.charAt(index));
+                        index++;
+                    } else {
+                        clearInterval(typingIntervalRef.current);
+                    }
+                }, 40);
+            };
+
+            const handleCloseLetter = () => {
+                setOpenLetter(null);
+                setTypedText("");
+                if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
+            };
+
+            return (
+                <React.Fragment>
+                    {/* Header Navbar */}
+                    <nav className="navbar interactive">
+                        <a href="{% url 'home' %}" className="logo">A&A</a>
+                        <ul className="nav-links">
+                            <li><a href="{% url 'home' %}">Home</a></li>
+                            <li><a href="{% url 'gallery' %}">Gallery</a></li>
+                            <li><a href="{% url 'she' %}">Anu ❤️</a></li>
+                            <li><a href="{% url 'love_3d' %}" style={{ color: 'var(--primary)', borderBottom: '2px solid var(--primary)', borderRadius: '0' }}>3D World ✨</a></li>
+                        </ul>
+                    </nav>
+
+                    {/* Dialogue Overlay bubbles */}
+                    <div className="dialogue-overlay">
+                        <div className={`dialogue-bubble ${speechGirl ? 'visible' : ''}`}>
+                            You make my heart smile. 😊 Let's stay together forever.
+                        </div>
+                        <div className={`dialogue-bubble ${speechBoy ? 'visible' : ''}`}>
+                            I will love you forever, my Anu. ❤️ You are my everything.
+                        </div>
+                    </div>
+
+                    {/* Left Sidebar Controls */}
+                    <div className="controls-sidebar glass-panel interactive">
+                        <div className="control-group">
+                            <div className="control-label">Romantic Ambient Color</div>
+                            <button className={`btn-theme ${activeTheme === 'pink' ? 'active' : ''}`} onClick={() => changeTheme('pink')}>
+                                <i className="fa-solid fa-heart"></i> Pink Romance
+                            </button>
+                            <button className={`btn-theme ${activeTheme === 'blue' ? 'active' : ''}`} onClick={() => changeTheme('blue')}>
+                                <i className="fa-solid fa-star"></i> Moonlight Blue
+                            </button>
+                            <button className={`btn-theme ${activeTheme === 'violet' ? 'active' : ''}`} onClick={() => changeTheme('violet')}>
+                                <i className="fa-solid fa-wand-magic-sparkles"></i> Sunset Violet
+                            </button>
+                        </div>
+
+                        <div className="control-group">
+                            <div className="control-label">Atmosphere Particles</div>
+                            <div className="particle-buttons">
+                                <button className={`btn-particle ${activeParticles === 'hearts' ? 'active' : ''}`} onClick={() => changeParticles('hearts')}>
+                                    <span>❤️</span> Hearts
+                                </button>
+                                <button className={`btn-particle ${activeParticles === 'sakura' ? 'active' : ''}`} onClick={() => changeParticles('sakura')}>
+                                    <span>🌸</span> Sakura
+                                </button>
+                                <button className={`btn-particle ${activeParticles === 'stars' ? 'active' : ''}`} onClick={() => changeParticles('stars')}>
+                                    <span>✨</span> Stars
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="control-group">
+                            <div className="control-label">Interactive Magic</div>
+                            <button className="btn-firework" onClick={handleLaunchFirework}>
+                                <i className="fa-solid fa-fireworks"></i> Launch Love Firework 🎆
+                            </button>
+                        </div>
+
+                        <div className="control-group">
+                            <div className="control-label">BGM Player</div>
+                            <div className="music-card">
+                                <div className={`music-disc ${isPlayingMusic ? 'playing' : ''}`}>
+                                    <i className="fa-solid fa-music"></i>
+                                </div>
+                                <div className="music-info">
+                                    <div className="music-title">Love Theme</div>
+                                    <div className="music-artist">Instrumental Romance</div>
+                                </div>
+                                <button className="music-play-btn" onClick={toggleMusic}>
+                                    <i className={`fa-solid ${isPlayingMusic ? 'fa-circle-pause' : 'fa-circle-play'}`}></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Right Letters Board */}
+                    <div className="letters-board glass-panel interactive">
+                        <div className="control-label" style={{ textAlign: 'center', marginBottom: '10px' }}>Love Envelopes</div>
+                        {LOVE_LETTERS.map((letter) => (
+                            <div key={letter.id} className="letter-envelope" onClick={() => handleOpenLetter(letter)}>
+                                <div className="envelope-icon">
+                                    <i className="fa-solid fa-envelope-open-text"></i>
+                                </div>
+                                <div className="envelope-details">
+                                    <div className="envelope-title">{letter.title}</div>
+                                    <div className="envelope-desc">{letter.desc}</div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Interactive Bottom Bar */}
+                    <div className="bottom-bar glass-panel">
+                        <i className="fa-solid fa-circle-info"></i>
+                        <span>Drag to rotate the world. Scroll to zoom. Click on the characters to talk. ✨</span>
+                    </div>
+
+                    {/* Letter Modal Overlay */}
+                    <div className={`letter-modal ${openLetter ? 'open' : ''} interactive`}>
+                        {openLetter && (
+                            <div className="letter-paper">
+                                <div className="letter-close" onClick={handleCloseLetter}>
+                                    <i className="fa-solid fa-circle-xmark"></i>
+                                </div>
+                                <h2 className="letter-title">{openLetter.title}</h2>
+                                <div className="letter-content">
+                                    {typedText}
+                                </div>
+                                <div className="letter-signature">
+                                    {openLetter.signature}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </React.Fragment>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('react-root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

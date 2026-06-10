@@ -1,0 +1,25 @@
+{
+  "name": "lawf",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000L\u0000A\u0000W\u0000F\u0000\r\u0000 \u0000",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reado-2026/LAWF.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/reado-2026/LAWF/issues"
+  },
+  "homepage": "https://github.com/reado-2026/LAWF#readme",
+  "dependencies": {
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  }
+}

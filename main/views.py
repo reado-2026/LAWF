@@ -15,6 +15,10 @@ def gallery(request):
 def she(request):
     return render(request, 'main/she.html')
 
+@login_required
+def love_3d(request):
+    return render(request, 'main/love_3d.html')
+
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
