@@ -255,8 +255,8 @@
   <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
 
   <!-- React Application Core -->
+  {% verbatim %}
   <script type="text/babel">
-    {% verbatim %}
     const { useState, useEffect, useRef } = React;
 
     const userDataEl = document.getElementById('user-data');
@@ -867,8 +867,8 @@
     const container = document.getElementById('app-root');
     const root = ReactDOM.createRoot(container);
     root.render(<App />);
-    {% endverbatim %}
   </script>
+  {% endverbatim %}
 </body>
 
 </html>
