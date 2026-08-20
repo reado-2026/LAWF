@@ -1,7 +1,7 @@
 {
   "name": "lawf",
   "version": "1.0.0",
-  "description": "��#\u0000 \u0000L\u0000A\u0000W\u0000F\u0000\r\u0000 \u0000",
+  "description": "Our Love Story - Interactive React Web Application",
   "main": "index.js",
   "scripts": {
     "dev": "vite",

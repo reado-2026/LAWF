@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
 
 // 1. Data Definitions
 const LOVE_MEMORIES = [
@@ -8,7 +7,9 @@ const LOVE_MEMORIES = [
     date: "August 14, 2023",
     title: "The Day We First Met",
     desc: "A simple glance that changed my world forever. The day my soul recognized yours.",
-    icon: "✨",
+    icon: "fa-calendar-days",
+    iconBg: "#ff758c",
+    thumb: "/assets/gallery/gallery3.jpg",
     story: "It was a warm afternoon when our eyes met. The crowded room suddenly grew quiet, and in that split second, I knew my life would never be the same. That initial smile of yours remains etched in my heart."
   },
   {
@@ -16,7 +17,9 @@ const LOVE_MEMORIES = [
     date: "Aug 2023 - Feb 2025",
     title: "Beautiful Friendship",
     desc: "A chapter of shared secrets, endless laughter, and a bond that grew stronger every day.",
-    icon: "☕",
+    icon: "fa-mug-hot",
+    iconBg: "#f3a683",
+    thumb: "/assets/gallery/gallery5.jpg",
     story: "We built our bond cup by cup, laugh by laugh. We shared dreams, supported each other through late-night study sessions, and talked about everything under the sun. You became my safe space."
   },
   {
@@ -24,7 +27,9 @@ const LOVE_MEMORIES = [
     date: "February 24, 2025",
     title: "The Big Proposal",
     desc: "With a heart full of hope, I asked you to be my forever. The day I promised to love you always.",
-    icon: "💍",
+    icon: "fa-ring",
+    iconBg: "#786fa6",
+    thumb: "/assets/gallery/gallery15.jpg",
     story: "My heart was pounding, my hands slightly shaking as I looked into your eyes and asked you to stand by me for the rest of our lives. It was a promise of a lifetime, wrapped in hope."
   },
   {
@@ -32,7 +37,9 @@ const LOVE_MEMORIES = [
     date: "August 24, 2025",
     title: "She Accepted! ❤️",
     desc: "The most beautiful 'Yes' I've ever heard. Our story officially entered its greatest chapter.",
-    icon: "💝",
+    icon: "fa-heart",
+    iconBg: "#e84393",
+    thumb: "/assets/gallery/gallery2.png",
     story: "The moment you officially agreed to be mine. It marked the start of our countdown of pure, endless love. From that day on, it has been 'us' against the world."
   }
 ];
@@ -82,57 +89,19 @@ const GALLERY_ITEMS = [
   { type: "video", url: "/assets/anu/WhatsApp Video 2026-04-24 at 1.08.48 PM.mp4", title: "Endless Joy - Thank you for being mine." }
 ];
 
-function GalleryCard({ item }) {
-  const videoRef = useRef(null);
-  const [playing, setPlaying] = useState(false);
-
-  const handleVideoClick = () => {
-    if (item.type !== 'video') return;
-    if (playing) {
-      videoRef.current.pause();
-      setPlaying(false);
-    } else {
-      // Pause other videos
-      document.querySelectorAll('video').forEach(vid => {
-        if (vid !== videoRef.current) vid.pause();
-      });
-      videoRef.current.play().catch(e => console.log(e));
-      setPlaying(true);
-    }
-  };
-
-  return (
-    <div 
-      className={`gallery-card glass-card ${playing ? 'playing' : ''}`}
-      onClick={handleVideoClick}
-    >
-      {item.type === 'video' ? (
-        <React.Fragment>
-          <video ref={videoRef} loop playsInline muted={false}>
-            <source src={item.url} type="video/mp4" />
-          </video>
-          <div className="play-indicator"></div>
-        </React.Fragment>
-      ) : (
-        <img src={item.url} alt={item.title} loading="lazy" />
-      )}
-      
-      <div className="gallery-card-caption">
-        <h4>{item.title.split(' - ')[0]}</h4>
-        <p>{item.title.split(' - ')[1] || item.title}</p>
-      </div>
-    </div>
-  );
-}
-
 export default function App() {
-  const [activeTab, setActiveTab] = useState('home'); // 'home' | 'story' | 'gallery' | 'calculator'
-  const [activeTheme, setActiveTheme] = useState('midnight'); // 'midnight' | 'rosegold' | 'emerald'
+  const [activeTab, setActiveTab] = useState('home');
   const [daysLeft, setDaysLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [isPlayingMusic, setIsPlayingMusic] = useState(false);
-  const [activeMemory, setActiveMemory] = useState(LOVE_MEMORIES[3]);
+  const [activeMemory, setActiveMemory] = useState(LOVE_MEMORIES[0]);
   const [currentWish, setCurrentWish] = useState(ROMANTIC_WISHES[0]);
-  const [wishFade, setWishFade] = useState(false);
+
+  // Life Journey Scroll Fill Height State (%)
+  const [journeyProgress, setJourneyProgress] = useState(0);
+
+  // Video Lightbox Modal State
+  const [showVideoModal, setShowVideoModal] = useState(false);
+  const [currentVideoUrl, setCurrentVideoUrl] = useState('/assets/anu/WhatsApp Video 2026-04-24 at 1.08.47 PM (1).mp4');
 
   // Love Calculator States
   const [calcNames, setCalcNames] = useState({ name1: 'Ashik', name2: 'Anu' });
@@ -143,81 +112,87 @@ export default function App() {
   // Audio BGM Ref
   const audioRef = useRef(null);
 
-  // Trigger global falling hearts animation periodically
+  // Calculate Life Journey Path Progress on Scroll
   useEffect(() => {
-    const generateHeart = () => {
-      const container = document.getElementById('hearts-bg-particles');
-      if (!container) return;
+    const handleJourneyScroll = () => {
+      const section = document.getElementById('story');
+      if (!section) return;
 
-      const heart = document.createElement('div');
-      heart.innerHTML = Math.random() > 0.5 ? '❤️' : '💖';
-      heart.style.position = 'absolute';
-      heart.style.left = Math.random() * 100 + 'vw';
-      heart.style.bottom = '-40px';
-      heart.style.fontSize = (Math.random() * 18 + 12) + 'px';
-      heart.style.opacity = Math.random() * 0.45 + 0.15;
-      heart.style.color = activeTheme === 'rosegold' ? '#d4a373' : (activeTheme === 'emerald' ? '#00f2fe' : '#ff4e79');
-      heart.style.pointerEvents = 'none';
-      heart.style.zIndex = '0';
-      
-      container.appendChild(heart);
-      
-      const duration = Math.random() * 8 + 8;
-      gsap.to(heart, {
-        y: -window.innerHeight - 200,
-        x: (Math.random() - 0.5) * 160,
-        rotation: Math.random() * 360,
-        duration: duration,
-        ease: "none",
-        onComplete: () => heart.remove()
-      });
+      const rect = section.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      const totalHeight = rect.height;
+      const currentPos = windowHeight - rect.top;
+
+      let percentage = (currentPos / (totalHeight + windowHeight * 0.2)) * 100;
+      percentage = Math.max(0, Math.min(100, percentage));
+      setJourneyProgress(percentage);
     };
 
-    const heartTimer = setInterval(generateHeart, 1200);
-    return () => clearInterval(heartTimer);
-  }, [activeTheme]);
-
-  // Mouse trail particles
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      if (Math.random() > 0.2) return; // Limit spawn rate
-
-      const element = document.createElement('div');
-      const isStar = Math.random() > 0.5;
-      
-      if (isStar) {
-        element.innerHTML = Math.random() > 0.5 ? '✨' : '⭐';
-        element.style.color = 'var(--accent)';
-      } else {
-        element.innerHTML = Math.random() > 0.5 ? '❤️' : '💖';
-        element.style.color = 'var(--primary)';
-      }
-      
-      element.style.position = 'fixed';
-      element.style.left = e.clientX + 'px';
-      element.style.top = e.clientY + 'px';
-      element.style.fontSize = (Math.random() * 12 + 6) + 'px';
-      element.style.pointerEvents = 'none';
-      element.style.zIndex = '9999';
-      element.style.opacity = '0.9';
-      document.body.appendChild(element);
-
-      gsap.to(element, {
-        y: e.clientY + (Math.random() - 0.5) * 70 - 70,
-        x: e.clientX + (Math.random() - 0.5) * 70,
-        scale: 0.1,
-        opacity: 0,
-        duration: 1.2,
-        ease: "power1.out",
-        onComplete: () => element.remove()
-      });
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    window.addEventListener('scroll', handleJourneyScroll);
+    return () => window.removeEventListener('scroll', handleJourneyScroll);
   }, []);
 
-  // Live anniversary counter updater
+  // IntersectionObserver for Scroll Reveal Animations
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+    );
+
+    const revealElements = document.querySelectorAll('.reveal-on-scroll, .reveal-scale, .reveal-left, .reveal-right, .journey-item');
+    revealElements.forEach((el) => observer.observe(el));
+
+    return () => {
+      revealElements.forEach((el) => observer.unobserve(el));
+    };
+  }, []);
+
+  // Smooth scroll handler
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const navOffset = 70;
+      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+      const offsetPosition = elementPosition - navOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+      setActiveTab(sectionId);
+    }
+  };
+
+  // Scroll active section sync
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = ['home', 'story', 'moments', 'gallery', 'widgets'];
+      const scrollPosition = window.scrollY + 200;
+
+      for (const sectionId of sections) {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          const top = element.offsetTop;
+          const height = element.offsetHeight;
+          if (scrollPosition >= top && scrollPosition < top + height) {
+            setActiveTab(sectionId);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Live anniversary counter
   useEffect(() => {
     const startDate = new Date('2025-08-24T00:00:00');
     
@@ -239,14 +214,7 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
-  // Sync active theme class to HTML element
-  useEffect(() => {
-    const docElement = document.documentElement;
-    docElement.className = '';
-    docElement.classList.add(`theme-${activeTheme}`);
-  }, [activeTheme]);
-
-  // Handle Play/Pause music
+  // Music toggle
   const handleToggleMusic = () => {
     if (isPlayingMusic) {
       audioRef.current.pause();
@@ -256,44 +224,23 @@ export default function App() {
     setIsPlayingMusic(!isPlayingMusic);
   };
 
-  // Draw romantic wish card
-  const handleNextWish = (e) => {
-    setWishFade(true);
-    setTimeout(() => {
-      let newWish = currentWish;
-      while (newWish === currentWish) {
-        const index = Math.floor(Math.random() * ROMANTIC_WISHES.length);
-        newWish = ROMANTIC_WISHES[index];
-      }
-      setCurrentWish(newWish);
-      setWishFade(false);
-
-      // Heart burst from click origin
-      const rect = e.target.getBoundingClientRect();
-      for(let i = 0; i < 8; i++) {
-        const h = document.createElement('div');
-        h.innerHTML = '❤️';
-        h.style.position = 'fixed';
-        h.style.left = (rect.left + rect.width / 2) + 'px';
-        h.style.top = rect.top + 'px';
-        h.style.zIndex = '9999';
-        h.style.pointerEvents = 'none';
-        document.body.appendChild(h);
-        
-        gsap.to(h, {
-          y: rect.top - 120 - Math.random() * 80,
-          x: (rect.left + rect.width / 2) + (Math.random() - 0.5) * 180,
-          opacity: 0,
-          scale: 1.6,
-          duration: 1.5,
-          ease: "power2.out",
-          onComplete: () => h.remove()
-        });
-      }
-    }, 300);
+  // Open Video Lightbox
+  const handleOpenVideo = (videoUrl) => {
+    if (videoUrl) setCurrentVideoUrl(videoUrl);
+    setShowVideoModal(true);
   };
 
-  // Calculate compatibility score + spawn particles
+  // Wish Card
+  const handleNextWish = () => {
+    let newWish = currentWish;
+    while (newWish === currentWish) {
+      const index = Math.floor(Math.random() * ROMANTIC_WISHES.length);
+      newWish = ROMANTIC_WISHES[index];
+    }
+    setCurrentWish(newWish);
+  };
+
+  // Spark Calculator
   const handleCalculateLove = (e) => {
     e.preventDefault();
     if (!calcNames.name1 || !calcNames.name2) return;
@@ -312,7 +259,7 @@ export default function App() {
         const n1 = calcNames.name1.toLowerCase().trim();
         const n2 = calcNames.name2.toLowerCase().trim();
         
-        let score = 95 + Math.floor(Math.random() * 5); // Base romantic range
+        let score = 95 + Math.floor(Math.random() * 5);
         let message = "A perfect cosmic connection! Your paths were written in the stars.";
         
         if ((n1.includes('ashik') && n2.includes('anu')) || (n1.includes('anu') && n2.includes('ashik'))) {
@@ -322,330 +269,364 @@ export default function App() {
         
         setCalcResult({ score, message });
         setCalcLoading(false);
-        
-        // Spawn giant burst of falling/floating hearts
-        for (let i = 0; i < 35; i++) {
-          const heart = document.createElement('div');
-          heart.innerHTML = i % 2 === 0 ? '❤️' : '💖';
-          heart.style.position = 'fixed';
-          heart.style.left = Math.random() * 100 + 'vw';
-          heart.style.bottom = '-50px';
-          heart.style.fontSize = (Math.random() * 30 + 15) + 'px';
-          heart.style.zIndex = '9999';
-          heart.style.pointerEvents = 'none';
-          heart.style.color = 'var(--primary)';
-          document.body.appendChild(heart);
-          
-          gsap.to(heart, {
-            y: -window.innerHeight - 100,
-            x: `+=${(Math.random() - 0.5) * 400}`,
-            rotation: Math.random() * 360,
-            duration: Math.random() * 3 + 2.5,
-            ease: "power2.out",
-            onComplete: () => heart.remove()
-          });
-        }
       }
-    }, 70);
+    }, 60);
   };
-
 
   return (
     <React.Fragment>
-      {/* Background Audio BGM */}
+      {/* Audio BGM */}
       <audio ref={audioRef} id="romantic-music-audio" loop>
         <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg" />
       </audio>
 
-      {/* Floating Background Blobs */}
-      <div className="background-blobs">
-        <div className="blob blob-1"></div>
-        <div className="blob blob-2"></div>
-        <div className="blob blob-3"></div>
-      </div>
+      {/* Navigation Header */}
+      <nav className="navbar">
+        <div className="logo" onClick={() => scrollToSection('home')}>
+          <i className="fa-solid fa-heart" style={{ color: 'var(--primary-rose)', fontSize: '1.4rem' }}></i> Our Story
+        </div>
 
-      {/* CSS Hearts particles background container */}
-      <div id="hearts-bg-particles" style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0 }}></div>
-
-      {/* Unified Nav Bar */}
-      <nav className="navbar glass-card">
-        <div className="logo" onClick={() => setActiveTab('home')}>A&A</div>
         <ul className="nav-links">
           <li>
-            <button className={activeTab === 'home' ? 'active' : ''} onClick={() => setActiveTab('home')}>
-              <i className="fa-solid fa-house"></i> Home
+            <button className={activeTab === 'home' ? 'active' : ''} onClick={() => scrollToSection('home')}>
+              Home
             </button>
           </li>
           <li>
-            <button className={activeTab === 'story' ? 'active' : ''} onClick={() => setActiveTab('story')}>
-              <i className="fa-solid fa-heart-pulse"></i> Our Story
+            <button className={activeTab === 'story' ? 'active' : ''} onClick={() => scrollToSection('story')}>
+              Our Story
             </button>
           </li>
           <li>
-            <button className={activeTab === 'gallery' ? 'active' : ''} onClick={() => setActiveTab('gallery')}>
-              <i className="fa-solid fa-images"></i> Gallery
+            <button className={activeTab === 'gallery' ? 'active' : ''} onClick={() => scrollToSection('gallery')}>
+              Gallery
             </button>
           </li>
           <li>
-            <button className={activeTab === 'calculator' ? 'active' : ''} onClick={() => setActiveTab('calculator')}>
-              <i className="fa-solid fa-calculator"></i> Compatibility
+            <button className={activeTab === 'moments' ? 'active' : ''} onClick={() => scrollToSection('moments')}>
+              Moments
+            </button>
+          </li>
+          <li>
+            <button className={activeTab === 'widgets' ? 'active' : ''} onClick={() => scrollToSection('widgets')}>
+              Music
             </button>
           </li>
         </ul>
 
-        {/* Dynamic Theme Selector */}
-        <div className="theme-toggle-bar">
-          <button 
-            className={`theme-toggle-btn active-midnight ${activeTheme === 'midnight' ? 'active' : ''}`} 
-            onClick={() => setActiveTheme('midnight')}
-            style={{ backgroundColor: '#ff4e79', color: 'white' }}
-            title="Midnight Dream"
-          >
-            🌌
-          </button>
-          <button 
-            className={`theme-toggle-btn active-rosegold ${activeTheme === 'rosegold' ? 'active' : ''}`} 
-            onClick={() => setActiveTheme('rosegold')}
-            style={{ backgroundColor: '#d4a373', color: 'white' }}
-            title="Rose Gold Champagne"
-          >
-            💫
-          </button>
-          <button 
-            className={`theme-toggle-btn active-emerald ${activeTheme === 'emerald' ? 'active' : ''}`} 
-            onClick={() => setActiveTheme('emerald')}
-            style={{ backgroundColor: '#00f2fe', color: 'white' }}
-            title="Emerald Twilight"
-          >
-            ✨
+        <div className="nav-right-group">
+          <button className="btn-header-watch" onClick={() => handleOpenVideo('/assets/anu/WhatsApp Video 2026-04-24 at 1.08.47 PM (1).mp4')}>
+            Watch Our Video <i className="fa-solid fa-circle-play"></i>
           </button>
         </div>
       </nav>
 
-      {/* Floating Music widget */}
-      <div className="music-widget-floating glass-card" onClick={handleToggleMusic}>
+      {/* Floating BGM Player */}
+      <div className="music-widget-floating" onClick={handleToggleMusic}>
         <div className={`equalizer-container ${isPlayingMusic ? 'playing' : ''}`}>
           <div className="equalizer-bar"></div>
           <div className="equalizer-bar"></div>
           <div className="equalizer-bar"></div>
           <div className="equalizer-bar"></div>
         </div>
-        <span style={{ fontSize: '0.9rem', fontWeight: '700', color: isPlayingMusic ? 'var(--primary)' : '#fff' }}>
-          {isPlayingMusic ? 'Now Playing' : 'Play Love Song'}
+        <span style={{ fontSize: '0.85rem', fontWeight: '600' }}>
+          {isPlayingMusic ? 'Now Playing' : 'Play Music'}
         </span>
       </div>
 
-      {/* Main Tab Routing Rendering */}
-      <main style={{ minHeight: '90vh', position: 'relative', zIndex: 1 }}>
-        
-        {/* TAB 1: HOME LANDING */}
-        {activeTab === 'home' && (
-          <div className="hero-container">
-            <h1 className="hero-title">
-              Every Love Story is Beautiful, but ours is my <span className="highlight-text">favorite</span>.
-            </h1>
-            <p className="hero-subtitle">Dedicated to the one who makes my heart skip a beat.</p>
+      <main>
+        {/* HERO SECTION (ULTRA-PREMIUM SIDE-BY-SIDE DESIGN) */}
+        <section id="home" className="hero-section">
+          {/* Left Text Content */}
+          <div className="hero-left-content reveal-left">
+            <div className="welcome-pill-badge">
+              <span>✨</span> WELCOME TO OUR STORY <span>✨</span>
+            </div>
             
-            <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '40px' }}>
-              <button onClick={() => setActiveTab('gallery')} className="btn-primary">
-                Browse Photos
+            <h1 className="hero-title">
+              Our <span className="title-pink-gradient">Love Story</span>
+              <span className="title-accent">💕</span>
+            </h1>
+
+            <p className="hero-subtitle">
+              A journey that started with a glance and became our forever. Dedicated to the one who makes my heart skip a beat.
+            </p>
+
+            <div className="hero-actions">
+              <button className="btn-primary-gradient" onClick={() => scrollToSection('story')}>
+                Explore Our Story 💖
               </button>
-            </div>
 
-            {/* Anniversary Countdown Counter */}
-            <div className="countdown-card glass-card">
-              <h2 className="countdown-header">Our Journey Started</h2>
-              <div className="countdown-date">August 24, 2025</div>
-              
-              <div className="countdown-grid">
-                <div className="countdown-item">
-                  <span className="countdown-number">{daysLeft.days}</span>
-                  <span className="countdown-label">Days</span>
-                </div>
-                <div className="countdown-item">
-                  <span className="countdown-number">{String(daysLeft.hours).padStart(2, '0')}</span>
-                  <span className="countdown-label">Hours</span>
-                </div>
-                <div className="countdown-item">
-                  <span className="countdown-number">{String(daysLeft.minutes).padStart(2, '0')}</span>
-                  <span className="countdown-label">Mins</span>
-                </div>
-                <div className="countdown-item">
-                  <span className="countdown-number" style={{ color: 'var(--primary-light)' }}>
-                    {String(daysLeft.seconds).padStart(2, '0')}
-                  </span>
-                  <span className="countdown-label">Secs</span>
-                </div>
-              </div>
-              
-              <div style={{ fontSize: '0.95rem', background: 'rgba(255, 78, 121, 0.08)', padding: '10px 24px', borderRadius: '50px', border: '1px solid var(--primary)', display: 'inline-block' }}>
-                Today: {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-              </div>
-            </div>
-
-            {/* Love Notes Note Box */}
-            <div className="glass-card" style={{ maxWidth: '650px', width: '100%', padding: '40px', margin: '20px auto', textAlign: 'center' }}>
-              <h3 style={{ fontFamily: 'Dancing Script, cursive', fontSize: '2.4rem', color: 'var(--primary)', marginBottom: '10px' }}>Love Notes</h3>
-              <div className="quote-icon" style={{ fontSize: '3rem', opacity: 0.15, marginBottom: '-10px' }}>“</div>
-              <p 
-                className={wishFade ? 'fade' : ''} 
-                style={{ 
-                  transition: 'opacity 0.3s', 
-                  opacity: wishFade ? 0 : 1, 
-                  fontSize: '1.65rem', 
-                  fontFamily: 'Dancing Script, cursive', 
-                  color: 'var(--primary-light)',
-                  minHeight: '80px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  lineHeight: '1.4'
-                }}
-              >
-                {currentWish}
-              </p>
-              <button 
-                id="wish-btn" 
-                className="btn-primary" 
-                onClick={handleNextWish}
-                style={{ padding: '10px 24px', fontSize: '0.85rem', marginTop: '20px' }}
-              >
-                Draw Another Note 💖
+              <button className="btn-outline-glass" onClick={() => handleOpenVideo('/assets/anu/WhatsApp Video 2026-04-24 at 1.08.47 PM (1).mp4')}>
+                Watch Video <i className="fa-solid fa-circle-play"></i>
               </button>
             </div>
           </div>
-        )}
 
-        {/* TAB 2: OUR STORY TIMELINE */}
-        {activeTab === 'story' && (
-          <section className="timeline-section">
-            <h2 className="timeline-title">Our Romantic Odyssey</h2>
-            
-            <div className="timeline-grid">
-              {/* Left Timeline milestone lists */}
-              <div className="timeline-list">
-                {LOVE_MEMORIES.map((memory) => (
-                  <div 
-                    key={memory.id} 
-                    className={`timeline-card glass-card ${activeMemory.id === memory.id ? 'active' : ''}`}
-                    onClick={() => setActiveMemory(memory)}
-                  >
-                    <div className="timeline-header">
-                      <span className="timeline-icon">{memory.icon}</span>
-                      <div className="timeline-meta">
-                        <span className="timeline-date">{memory.date}</span>
-                        <h3>{memory.title}</h3>
-                        <p>{memory.desc}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+          {/* Right Hero Portrait Frame */}
+          <div className="hero-right-container reveal-right">
+            <div className="hero-portrait-card">
+              {/* Top Glass Tag Badge */}
+              <div className="hero-top-tag-badge">
+                <i className="fa-solid fa-heart" style={{ color: '#ff4757' }}></i> Soulmates Forever
               </div>
 
-              {/* Right Memory spotlights */}
-              <div className="timeline-detail-card glass-card">
-                <div className="timeline-detail-decor">
-                  <i className="fa-solid fa-heart"></i>
+              <img 
+                src="/assets/gallery/gallery1.png" 
+                alt="Ashik & Anu" 
+              />
+            </div>
+
+            {/* Overlaid Corner Glass Quote Badge */}
+            <div className="hero-right-badge reveal-scale stagger-2">
+              <div className="badge-heart-icon">
+                <i className="fa-solid fa-heart"></i>
+              </div>
+              <p className="badge-quote-text">
+                Every love story is beautiful, ours is my favorite.
+              </p>
+              <div style={{ marginTop: '8px', color: 'var(--primary-rose)', fontSize: '0.9rem' }}>♥</div>
+            </div>
+          </div>
+
+          {/* Curved SVG Wave Divider */}
+          <svg className="hero-wave-divider" viewBox="0 0 1440 100" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M0 40C360 90 720 10 1080 60C1260 85 1380 50 1440 40V100H0V40Z" fill="var(--bg-cream)"/>
+          </svg>
+
+          {/* Scroll Down Arrow */}
+          <button className="scroll-down-btn" onClick={() => scrollToSection('story')}>
+            <i className="fa-solid fa-chevron-down"></i>
+          </button>
+        </section>
+
+        {/* SECTION 2: OUR STORY - LIFE JOURNEY SCROLL PATH TIMELINE */}
+        <section id="story" className="timeline-section-custom">
+          <div className="section-tagline reveal-on-scroll">
+            <i className="fa-solid fa-heart"></i> LIFE JOURNEY <i className="fa-solid fa-heart"></i>
+          </div>
+
+          <h2 className="section-main-title reveal-on-scroll">
+            The Moments That Made <span className="highlight-pink">Us</span>
+          </h2>
+
+          <div className="journey-timeline-container">
+            {/* Background Track Line */}
+            <div className="journey-track-bg"></div>
+
+            {/* Animated Dynamic Scroll Progress Line */}
+            <div className="journey-progress-bar" style={{ height: `${journeyProgress}%` }}></div>
+
+            {/* Alternating Journey Milestones */}
+            {LOVE_MEMORIES.map((memory, index) => {
+              const isEven = index % 2 === 0;
+              return (
+                <div 
+                  key={memory.id} 
+                  className={`journey-item ${isEven ? 'journey-item-left reveal-left' : 'journey-item-right reveal-right'}`}
+                  onClick={() => setActiveMemory(memory)}
+                >
+                  {/* Center Node Badge */}
+                  <div className="journey-center-node" style={{ backgroundColor: memory.iconBg }}>
+                    <i className={`fa-solid ${memory.icon}`}></i>
+                  </div>
+
+                  {/* Card Box */}
+                  <div className="journey-card-box">
+                    <span className="journey-date-tag">{memory.date}</span>
+                    <h3 className="journey-card-title">{memory.title}</h3>
+                    <p className="journey-card-desc">{memory.desc}</p>
+                    <img src={memory.thumb} alt={memory.title} className="journey-photo-thumb" />
+                  </div>
                 </div>
-                <span className="timeline-detail-tag">Memory Spotlight</span>
-                <h3 className="timeline-detail-title">{activeMemory.title}</h3>
-                <p className="timeline-detail-text">
-                  "{activeMemory.story}"
+              );
+            })}
+          </div>
+        </section>
+
+        {/* SECTION 3: AND THIS IS JUST THE BEGINNING */}
+        <section id="moments" className="beginning-banner-section">
+          {/* Left Polaroid Stack */}
+          <div className="polaroid-stack-container reveal-left">
+            <div className="polaroid-card polaroid-1">
+              <div className="polaroid-tape"></div>
+              <img src="/assets/gallery/gallery18.jpg" alt="Polaroid Memory 1" />
+            </div>
+
+            <div className="polaroid-card polaroid-2">
+              <div className="polaroid-tape"></div>
+              <img src="/assets/gallery/gallery19.jpg" alt="Polaroid Memory 2" />
+            </div>
+
+            <div className="polaroid-label">
+              Memories we cherish forever 💕
+            </div>
+          </div>
+
+          {/* Right Content */}
+          <div className="beginning-right-content reveal-right">
+            <div className="section-tagline" style={{ justifyContent: 'flex-start' }}>
+              <i className="fa-solid fa-heart"></i> COUNTLESS MEMORIES <i className="fa-solid fa-heart"></i>
+            </div>
+
+            <h2 className="beginning-title">
+              And This Is Just the Beginning 💕
+            </h2>
+
+            <p className="beginning-desc">
+              Thank you for being the most beautiful part of my story. Every day spent with you is a gift I will treasure for the rest of my life.
+            </p>
+
+            <button className="btn-primary-gradient" onClick={() => scrollToSection('gallery')}>
+              See Our Gallery <i className="fa-solid fa-images"></i>
+            </button>
+          </div>
+        </section>
+
+        {/* SECTION 4: CAPTURED MOMENTS (GALLERY) */}
+        <section id="gallery" className="gallery-section-custom">
+          <div className="section-tagline reveal-on-scroll">
+            <i className="fa-solid fa-heart"></i> OUR MEMORIES <i className="fa-solid fa-heart"></i>
+          </div>
+
+          <h2 className="section-main-title reveal-on-scroll">Captured Moments</h2>
+
+          <div className="gallery-grid-custom">
+            {GALLERY_ITEMS.map((item, index) => (
+              <div 
+                key={index} 
+                className={`gallery-card-item reveal-scale stagger-${(index % 4) + 1}`} 
+                onClick={() => item.type === 'video' ? handleOpenVideo(item.url) : null}
+              >
+                <div className="gallery-media-wrapper">
+                  {item.type === 'video' ? (
+                    <React.Fragment>
+                      <video src={item.url} muted preload="metadata" />
+                      <div className="play-overlay-badge">
+                        <i className="fa-solid fa-play"></i>
+                      </div>
+                    </React.Fragment>
+                  ) : (
+                    <img src={item.url} alt={item.title} loading="lazy" />
+                  )}
+                </div>
+
+                <div className="gallery-card-caption-custom">
+                  <h4>{item.title.split(' - ')[0]}</h4>
+                  <p>{item.title.split(' - ')[1] || item.title}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* SECTION 5: COUNTDOWN & SPARK CALCULATOR */}
+        <section id="widgets" className="widgets-section-custom">
+          <div className="section-tagline reveal-on-scroll">
+            <i className="fa-solid fa-heart"></i> FOREVER & ALWAYS <i className="fa-solid fa-heart"></i>
+          </div>
+
+          <h2 className="section-main-title reveal-on-scroll">Love & Compatibility</h2>
+
+          <div className="widgets-grid-container">
+            {/* Live Counter Widget */}
+            <div className="widget-card-custom reveal-left">
+              <h3 className="widget-title">Our Journey Started</h3>
+              <div style={{ color: 'var(--primary-rose)', fontWeight: '600', marginBottom: '20px' }}>August 24, 2025</div>
+
+              <div className="countdown-grid-custom">
+                <div className="countdown-box">
+                  <div className="countdown-num">{daysLeft.days}</div>
+                  <div className="countdown-lbl">Days</div>
+                </div>
+                <div className="countdown-box">
+                  <div className="countdown-num">{String(daysLeft.hours).padStart(2, '0')}</div>
+                  <div className="countdown-lbl">Hours</div>
+                </div>
+                <div className="countdown-box">
+                  <div className="countdown-num">{String(daysLeft.minutes).padStart(2, '0')}</div>
+                  <div className="countdown-lbl">Mins</div>
+                </div>
+                <div className="countdown-box">
+                  <div className="countdown-num">{String(daysLeft.seconds).padStart(2, '0')}</div>
+                  <div className="countdown-lbl">Secs</div>
+                </div>
+              </div>
+
+              {/* Love Note Drawer */}
+              <div style={{ background: 'var(--bg-cream)', padding: '20px', borderRadius: '16px', marginTop: '20px' }}>
+                <p style={{ fontFamily: 'var(--font-cursive)', fontSize: '1.5rem', color: 'var(--primary-rose)', minHeight: '60px' }}>
+                  "{currentWish}"
                 </p>
+                <button className="btn-primary-gradient" onClick={handleNextWish} style={{ padding: '10px 24px', fontSize: '0.85rem' }}>
+                  Draw Another Note 💖
+                </button>
               </div>
             </div>
-          </section>
-        )}
 
-        {/* TAB 3: MEDIA GALLERY */}
-        {activeTab === 'gallery' && (
-          <section className="gallery-section">
-            <h2 className="timeline-title">Captured Moments</h2>
-            <p style={{ color: 'var(--text-muted)', marginBottom: '30px', fontSize: '1.1rem' }}>
-              Every photograph and clip is a page in our memory book. Click to play videos.
-            </p>
-            
-            <div className="gallery-grid">
-              {GALLERY_ITEMS.map((item, index) => (
-                <GalleryCard key={index} item={item} />
-              ))}
-            </div>
-          </section>
-        )}
+            {/* Spark Calculator Widget */}
+            <div className="widget-card-custom reveal-right">
+              <h3 className="widget-title">Spark Calculator</h3>
 
-        {/* TAB 4: COMPATIBILITY CALCULATOR */}
-        {activeTab === 'calculator' && (
-          <section className="calculator-section">
-            <h2 className="timeline-title">Spark Calculator</h2>
-            <div className="calc-card glass-card">
-              
               {!calcResult && !calcLoading && (
-                <form onSubmit={handleCalculateLove} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                  <div className="calc-inputs">
-                    <div className="calc-input-group">
-                      <label className="calc-label">Your Name</label>
-                      <input 
-                        type="text" 
-                        value={calcNames.name1} 
-                        onChange={(e) => setCalcNames({ ...calcNames, name1: e.target.value })}
-                        className="calc-field"
-                        required 
-                      />
-                    </div>
-                    <div className="calc-input-group">
-                      <label className="calc-label">Her Name</label>
-                      <input 
-                        type="text" 
-                        value={calcNames.name2} 
-                        onChange={(e) => setCalcNames({ ...calcNames, name2: e.target.value })}
-                        className="calc-field"
-                        required 
-                      />
-                    </div>
-                  </div>
-                  <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
+                <form onSubmit={handleCalculateLove} style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '20px' }}>
+                  <input 
+                    type="text" 
+                    value={calcNames.name1} 
+                    onChange={(e) => setCalcNames({ ...calcNames, name1: e.target.value })}
+                    className="calc-field-custom"
+                    placeholder="Your Name"
+                    required 
+                  />
+                  <input 
+                    type="text" 
+                    value={calcNames.name2} 
+                    onChange={(e) => setCalcNames({ ...calcNames, name2: e.target.value })}
+                    className="calc-field-custom"
+                    placeholder="Her Name"
+                    required 
+                  />
+                  <button type="submit" className="btn-primary-gradient" style={{ justifyContent: 'center', width: '100%' }}>
                     Calculate Compatibility ❤️
                   </button>
                 </form>
               )}
 
               {calcLoading && (
-                <div className="calc-progress-container">
-                  <div className="calc-progress-heart">❤️</div>
-                  <div className="calc-progress-text">Connecting Souls... {calcProgress}%</div>
-                  <div className="calc-progress-bg">
-                    <div className="calc-progress-bar" style={{ width: `${calcProgress}%` }}></div>
-                  </div>
+                <div style={{ padding: '30px 0' }}>
+                  <div style={{ fontSize: '2.5rem', marginBottom: '10px' }}>❤️</div>
+                  <div style={{ fontWeight: '600', color: 'var(--primary-rose)' }}>Connecting Souls... {calcProgress}%</div>
                 </div>
               )}
 
               {calcResult && (
-                <div className="calc-result-container">
-                  <div className="calc-result-title">Compatibility Score</div>
-                  <div className="calc-result-score">{calcResult.score}%</div>
-                  <p className="calc-result-message">"{calcResult.message}"</p>
-                  <button 
-                    className="btn-secondary" 
-                    onClick={() => setCalcResult(null)} 
-                    style={{ padding: '12px 30px', borderRadius: '50px' }}
-                  >
+                <div style={{ padding: '20px 0' }}>
+                  <div style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Compatibility Score</div>
+                  <div style={{ fontSize: '3.5rem', fontWeight: '800', color: 'var(--primary-rose)' }}>{calcResult.score}%</div>
+                  <p style={{ fontStyle: 'italic', margin: '15px 0' }}>"{calcResult.message}"</p>
+                  <button className="btn-outline-glass" onClick={() => setCalcResult(null)} style={{ color: 'var(--primary-rose)', borderColor: 'var(--primary-rose)' }}>
                     Try Again 💫
                   </button>
                 </div>
               )}
-
             </div>
-          </section>
-        )}
-
+          </div>
+        </section>
       </main>
 
+      {/* VIDEO LIGHTBOX POPUP MODAL */}
+      {showVideoModal && (
+        <div className="video-modal-backdrop" onClick={() => setShowVideoModal(false)}>
+          <div className="video-modal-container" onClick={(e) => e.stopPropagation()}>
+            <button className="video-modal-close" onClick={() => setShowVideoModal(false)}>×</button>
+            <video className="video-modal-player" src={currentVideoUrl} controls autoPlay />
+          </div>
+        </div>
+      )}
+
       {/* Footer */}
-      <footer className="app-footer">
+      <footer className="app-footer-custom">
         <p style={{ color: 'var(--text-muted)' }}>Made with ❤️ for Anu & Ashik</p>
-        <button className="scroll-top-btn" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-          ↑
-        </button>
       </footer>
     </React.Fragment>
   );
